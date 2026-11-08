@@ -8,6 +8,7 @@ import '../pages/explorar_page.dart';
 import '../pages/guardados_page.dart';
 import '../pages/mis_tickets_page.dart';
 import '../routes/app_routes.dart';
+import '../routes/route_args.dart';
 import '../utils/busqueda.dart';
 
 class MainScreen extends StatefulWidget {
@@ -132,11 +133,74 @@ class _MainScreenState extends State<MainScreen> {
   void _actualizarIntereses(Set<int> intereses) =>
       setState(() => _usuario = _usuario.copyWith(intereses: intereses));
 
-  void _abrirEvento(int idEvento) =>
-      Navigator.pushNamed(context, AppRoutes.detalle, arguments: idEvento);
+  void _abrirEvento(int idEvento) {
+    final evento = _eventos.firstWhere((e) => e.idEvento == idEvento);
+    Navigator.pushNamed(context, AppRoutes.detalle,
+        arguments: DetalleArgs(
+          evento: evento,
+          entradas: _tiposEntrada.where((t) => t.idEvento == idEvento).toList(),
+          guardado: _estaGuardado(idEvento),
+          esPropio: evento.idOrganizador == kOrganizadorPropio,
+          porcentajeAfinidad: _usuario.personalizacionActiva
+              ? calcularAfinidad(_usuario, evento)
+              : null,
+          onToggleGuardado: () => _toggleGuardado(idEvento),
+          onReservar: _reservar,
+          onEditar: () =>
+              Navigator.pushNamed(context, AppRoutes.crearEvento, arguments: evento),
+          onEliminar: () => _eliminarEvento(idEvento),
+        ));
+  }
 
-  void _abrirTicket(int idReserva) =>
-      Navigator.pushNamed(context, AppRoutes.ticket, arguments: idReserva);
+  void _reservar(int idEntrada, int cantidad) {
+    final siguiente =
+        _reservas.fold(0, (m, r) => r.idReserva > m ? r.idReserva : m) + 1;
+    final entrada = _tiposEntrada.firstWhere((t) => t.idEntrada == idEntrada);
+    final reserva = Reserva(
+      idReserva: siguiente,
+      cantidad: cantidad,
+      codigoQr: 'PEIP-E${entrada.idEvento}-R$siguiente-U${_usuario.idUsuario}',
+      fechaReserva: DateTime.now(),
+      idUsuario: _usuario.idUsuario,
+      idEntrada: idEntrada,
+    );
+    setState(() => _reservas.add(reserva));
+    final evento = _eventos.firstWhere((e) => e.idEvento == entrada.idEvento);
+    Navigator.pop(context);
+    Navigator.pushNamed(context, AppRoutes.ticket,
+        arguments: TicketArgs(
+          ticket: (reserva: reserva, entrada: entrada, evento: evento),
+          onCancelar: () => _cerrarYCancelar(reserva.idReserva),
+        ));
+  }
+
+  void _eliminarEvento(int idEvento) {
+    setState(() {
+      final idsEntrada = _tiposEntrada
+          .where((t) => t.idEvento == idEvento)
+          .map((t) => t.idEntrada)
+          .toSet();
+      _reservas.removeWhere((r) => idsEntrada.contains(r.idEntrada));
+      _tiposEntrada.removeWhere((t) => t.idEvento == idEvento);
+      _guardados.removeWhere((g) => g.idEvento == idEvento);
+      _eventos.removeWhere((e) => e.idEvento == idEvento);
+    });
+    Navigator.pop(context);
+  }
+
+  void _cerrarYCancelar(int idReserva) {
+    _cancelarReserva(idReserva);
+    Navigator.pop(context);
+  }
+
+  void _abrirTicket(int idReserva) {
+    final ticket = _misTickets.firstWhere((t) => t.reserva.idReserva == idReserva);
+    Navigator.pushNamed(context, AppRoutes.ticket,
+        arguments: TicketArgs(
+          ticket: ticket,
+          onCancelar: () => _cerrarYCancelar(idReserva),
+        ));
+  }
 
   void _crearEvento() => Navigator.pushNamed(context, AppRoutes.crearEvento);
 
