@@ -12,6 +12,24 @@ class TicketPage extends StatelessWidget {
 
   const TicketPage({super.key, required this.ticket, required this.onCancelar});
 
+  Widget _fila(String etiqueta, String valor) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(etiqueta, style: const TextStyle(color: AppColors.textSecondary)),
+          Flexible(
+            child: Text(valor,
+                textAlign: TextAlign.end,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final r = ticket.reserva;
@@ -27,32 +45,22 @@ class TicketPage extends StatelessWidget {
             border: Border.all(color: AppColors.border),
           ),
           child: Column(children: [
-            Text(e.titulo,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary)),
-            const SizedBox(height: 4),
-            Text(rangoFechas(e.fechaInicio, e.fechaFin, e.todoElDia),
-                style: const TextStyle(color: AppColors.textSecondary)),
-            const SizedBox(height: 20),
-            QrImageView(data: r.codigoQr, size: 200),
+            QrImageView(data: r.codigoQr, size: 180),
             const SizedBox(height: 8),
             SelectableText(r.codigoQr,
                 style: const TextStyle(
                     fontFamily: 'monospace', fontWeight: FontWeight.w700)),
             const Divider(height: 32),
-            InfoRow(
-                icon: Icons.confirmation_number_outlined,
-                texto:
-                    '${r.cantidad} × ${ticket.entrada.nombre} (${precioTexto(ticket.entrada.precio)})'),
-            InfoRow(icon: Icons.place, texto: e.lugar),
-            InfoRow(
-                icon: Icons.schedule,
-                texto: r.fechaUso != null
-                    ? 'Usado el ${fechaCorta(r.fechaUso!)} ${hora(r.fechaUso!)}'
-                    : 'Reservado el ${fechaCorta(r.fechaReserva)}'),
+            _fila('Evento', e.titulo),
+            _fila('Tipo de entrada', ticket.entrada.nombre),
+            _fila('Cantidad', '${r.cantidad}'),
+            _fila('Lugar', e.lugar),
+            _fila('Fecha', rangoFechas(e.fechaInicio, e.fechaFin, e.todoElDia)),
+            _fila(
+                r.fechaUso != null ? 'Usado el' : 'Reservado el',
+                r.fechaUso != null
+                    ? '${fechaCorta(r.fechaUso!)} ${hora(r.fechaUso!)}'
+                    : fechaCorta(r.fechaReserva)),
           ]),
         ),
         const SizedBox(height: 20),

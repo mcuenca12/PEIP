@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../model/mock_data.dart';
 import '../model/models.dart';
-import '../theme/app_colors.dart';
 import '../utils/formato.dart';
 import '../widgets/widgets.dart';
 
@@ -196,40 +195,28 @@ class _CrearEventoPageState extends State<CrearEventoPage> {
   }
 
   Widget _bloqueEdicionAnterior() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-          color: AppColors.brand50, borderRadius: BorderRadius.circular(14)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Partir de una edición anterior',
-              style: TextStyle(fontWeight: FontWeight.w700)),
-          const Text(
-              'Copia datos, etiquetas y entradas; la fecha pasa al mes siguiente.',
-              style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-          DropdownButtonFormField<int>(
-            initialValue: _anteriorElegido,
-            isExpanded: true,
-            hint: const Text('Elegir edición…'),
-            items: [
-              for (final e in widget.edicionesAnteriores)
-                DropdownMenuItem(
-                    value: e.idEvento,
-                    child: Text(e.titulo,
-                        overflow: TextOverflow.ellipsis, maxLines: 1))
-            ],
-            onChanged: (id) {
-              final e = widget.edicionesAnteriores.firstWhere((x) => x.idEvento == id);
-              setState(() {
-                _anteriorElegido = id;
-                _cargar(e, widget.entradasDe(e.idEvento), desplazar: true);
-                _idEventoAnterior = e.idEvento;
-                _idSerie = e.idSerie;
-              });
-            },
-          ),
+    return PeipSectionCard(
+      titulo: 'Partir de una edición anterior',
+      subtitulo: 'Copia datos, etiquetas y entradas; la fecha pasa al mes siguiente.',
+      child: DropdownButtonFormField<int>(
+        initialValue: _anteriorElegido,
+        isExpanded: true,
+        hint: const Text('Elegir edición…'),
+        items: [
+          for (final e in widget.edicionesAnteriores)
+            DropdownMenuItem(
+                value: e.idEvento,
+                child: Text(e.titulo, overflow: TextOverflow.ellipsis, maxLines: 1))
         ],
+        onChanged: (id) {
+          final e = widget.edicionesAnteriores.firstWhere((x) => x.idEvento == id);
+          setState(() {
+            _anteriorElegido = id;
+            _cargar(e, widget.entradasDe(e.idEvento), desplazar: true);
+            _idEventoAnterior = e.idEvento;
+            _idSerie = e.idSerie;
+          });
+        },
       ),
     );
   }
@@ -270,97 +257,124 @@ class _CrearEventoPageState extends State<CrearEventoPage> {
       children: [
         if (!_editando && widget.edicionesAnteriores.isNotEmpty) ...[
           _bloqueEdicionAnterior(),
-          const SizedBox(height: 16),
         ],
-        PeipFormField(label: 'Título', child: PeipTextField(controller: _titulo)),
-        const SizedBox(height: 12),
-        PeipFormField(label: 'Eslogan', child: PeipTextField(controller: _eslogan)),
-        const SizedBox(height: 12),
-        PeipFormField(
-            label: 'Descripción',
-            child: PeipTextField(controller: _descripcion, maxLines: 4)),
-        const SizedBox(height: 12),
-        PeipFormField(label: 'Lugar', child: PeipTextField(controller: _lugar)),
-        const SizedBox(height: 12),
-        PeipFormField(
-          label: 'Aforo',
-          child: PeipTextField(controller: _aforo, keyboardType: TextInputType.number),
-        ),
-        const SizedBox(height: 12),
-        PeipFormField(
-          label: 'Categoría',
-          child: DropdownButtonFormField<int>(
-            initialValue: _idCategoria,
-            isExpanded: true,
-            items: [
-              for (final c in widget.categorias)
-                DropdownMenuItem(value: c.idCategoria, child: Text(c.nombre))
-            ],
-            onChanged: (v) => setState(() => _idCategoria = v!),
-          ),
-        ),
-        const SizedBox(height: 12),
-        PeipFormField(
-          label: 'Ciudad',
-          child: DropdownButtonFormField<int>(
-            initialValue: _idCiudad,
-            isExpanded: true,
-            items: [
-              for (final c in widget.ciudades)
-                DropdownMenuItem(value: c.idCiudad, child: Text(c.nombre))
-            ],
-            onChanged: (v) => setState(() => _idCiudad = v!),
-          ),
-        ),
-        SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          title: const Text('Todo el día'),
-          value: _todoElDia,
-          onChanged: (v) => setState(() => _todoElDia = v),
-        ),
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          leading: const Icon(Icons.event),
-          title: const Text('Inicio'),
-          subtitle: Text(_todoElDia
-              ? fechaCorta(_inicio)
-              : '${fechaCorta(_inicio)} ${hora(_inicio)}'),
-          onTap: () async {
-            final d = await _elegirFecha(_inicio);
-            if (d != null) setState(() => _inicio = d);
-          },
-        ),
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          leading: const Icon(Icons.event_available),
-          title: const Text('Fin'),
-          subtitle: Text(
-              _todoElDia ? fechaCorta(_fin) : '${fechaCorta(_fin)} ${hora(_fin)}'),
-          onTap: () async {
-            final d = await _elegirFecha(_fin);
-            if (d != null) setState(() => _fin = d);
-          },
-        ),
-        const SectionHeader(titulo: 'Etiquetas'),
-        Wrap(spacing: 8, runSpacing: 8, children: [
-          for (final t in widget.etiquetas)
-            PeipChip(
-              label: t.nombre,
-              selected: _etiquetas.contains(t.idEtiqueta),
-              onTap: () => setState(() {
-                if (!_etiquetas.add(t.idEtiqueta)) _etiquetas.remove(t.idEtiqueta);
-              }),
+        PeipSectionCard(
+          titulo: 'Información básica',
+          child: Column(children: [
+            PeipFormField(label: 'Título', child: PeipTextField(controller: _titulo)),
+            const SizedBox(height: 12),
+            PeipFormField(
+                label: 'Eslogan', child: PeipTextField(controller: _eslogan)),
+            const SizedBox(height: 12),
+            PeipFormField(
+                label: 'Descripción',
+                child: PeipTextField(controller: _descripcion, maxLines: 4)),
+            const SizedBox(height: 12),
+            PeipFormField(
+              label: 'Categoría',
+              child: DropdownButtonFormField<int>(
+                initialValue: _idCategoria,
+                isExpanded: true,
+                items: [
+                  for (final c in widget.categorias)
+                    DropdownMenuItem(value: c.idCategoria, child: Text(c.nombre))
+                ],
+                onChanged: (v) => setState(() => _idCategoria = v!),
+              ),
             ),
-        ]),
-        const SectionHeader(titulo: 'Tipos de entrada'),
-        for (var i = 0; i < _entradas.length; i++) _filaEntrada(i),
-        PeipButton(
-          label: 'Agregar tipo de entrada',
-          kind: PeipButtonKind.secondary,
-          icon: Icons.add,
-          onPressed: () => setState(() => _entradas.add(_EntradaForm())),
+            const SizedBox(height: 12),
+            PeipFormField(
+              label: 'Aforo',
+              child: PeipTextField(
+                  controller: _aforo, keyboardType: TextInputType.number),
+            ),
+          ]),
         ),
-        const SizedBox(height: 20),
+        PeipSectionCard(
+          titulo: 'Cuándo',
+          // Material transparente: si no, el fondo de la tarjeta tapa el
+          // ripple y el color de los ListTile de abajo.
+          child: Material(
+            type: MaterialType.transparency,
+            child: Column(children: [
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Todo el día'),
+                value: _todoElDia,
+                onChanged: (v) => setState(() => _todoElDia = v),
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.event),
+                title: const Text('Inicio'),
+                subtitle: Text(_todoElDia
+                    ? fechaCorta(_inicio)
+                    : '${fechaCorta(_inicio)} ${hora(_inicio)}'),
+                onTap: () async {
+                  final d = await _elegirFecha(_inicio);
+                  if (d != null) setState(() => _inicio = d);
+                },
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.event_available),
+                title: const Text('Fin'),
+                subtitle: Text(_todoElDia
+                    ? fechaCorta(_fin)
+                    : '${fechaCorta(_fin)} ${hora(_fin)}'),
+                onTap: () async {
+                  final d = await _elegirFecha(_fin);
+                  if (d != null) setState(() => _fin = d);
+                },
+              ),
+            ]),
+          ),
+        ),
+        PeipSectionCard(
+          titulo: 'Dónde',
+          child: Column(children: [
+            PeipFormField(
+              label: 'Ciudad',
+              child: DropdownButtonFormField<int>(
+                initialValue: _idCiudad,
+                isExpanded: true,
+                items: [
+                  for (final c in widget.ciudades)
+                    DropdownMenuItem(value: c.idCiudad, child: Text(c.nombre))
+                ],
+                onChanged: (v) => setState(() => _idCiudad = v!),
+              ),
+            ),
+            const SizedBox(height: 12),
+            PeipFormField(label: 'Lugar', child: PeipTextField(controller: _lugar)),
+          ]),
+        ),
+        PeipSectionCard(
+          titulo: 'Tipos de entrada',
+          child: Column(children: [
+            for (var i = 0; i < _entradas.length; i++) _filaEntrada(i),
+            PeipButton(
+              label: 'Agregar tipo de entrada',
+              kind: PeipButtonKind.secondary,
+              icon: Icons.add,
+              onPressed: () => setState(() => _entradas.add(_EntradaForm())),
+            ),
+          ]),
+        ),
+        PeipSectionCard(
+          titulo: 'Etiquetas',
+          child: Wrap(spacing: 8, runSpacing: 8, children: [
+            for (final t in widget.etiquetas)
+              PeipChip(
+                label: t.nombre,
+                selected: _etiquetas.contains(t.idEtiqueta),
+                onTap: () => setState(() {
+                  if (!_etiquetas.add(t.idEtiqueta)) _etiquetas.remove(t.idEtiqueta);
+                }),
+              ),
+          ]),
+        ),
+        const SizedBox(height: 4),
         Row(children: [
           Expanded(
             child: PeipButton(

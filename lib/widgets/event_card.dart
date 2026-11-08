@@ -6,7 +6,10 @@ import '../theme/app_icons.dart';
 import '../utils/formato.dart';
 import 'peip_badge.dart';
 
-/// Tarjeta de evento para listas (recomendados, guardados).
+/// Tarjeta de evento para listas (recomendados, guardados). Imagen arriba
+/// con los badges superpuestos y el botón de guardar, como en el
+/// componente "Event Card" de la galería de Figma — antes tenía un bloque
+/// de ícono a la izquierda y el contenido al lado, que no era el patrón real.
 class EventCard extends StatelessWidget {
   final Evento evento;
   final Categoria categoria;
@@ -31,42 +34,46 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = colorImagenEvento(evento.idEvento);
     return Card(
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 12),
       color: AppColors.surface,
+      clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: const BorderSide(color: AppColors.border),
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(children: [
-            Container(
-              width: 64,
-              height: 64,
-              decoration: BoxDecoration(
-                  color: color, borderRadius: BorderRadius.circular(14)),
-              child: Icon(iconoDe(categoria.icono),
-                  color: Colors.white, size: 30),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(children: [
+              Container(height: 120, color: colorImagenEvento(evento.idEvento)),
+              if (porcentajeAfinidad != null)
+                Positioned(
+                  top: 10,
+                  left: 10,
+                  child: PeipBadge(
+                      tipo: PeipBadgeType.match, texto: '$porcentajeAfinidad%'),
+                ),
+              Positioned(
+                bottom: 10,
+                left: 10,
+                child: PeipBadge(
+                    tipo: PeipBadgeType.categoria, texto: categoria.nombre),
+              ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: _BotonGuardar(guardado: guardado, onTap: onToggleGuardado),
+              ),
+            ]),
+            Padding(
+              padding: const EdgeInsets.all(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Wrap(spacing: 6, runSpacing: 4, children: [
-                    PeipBadge(tipo: PeipBadgeType.categoria, texto: categoria.nombre),
-                    if (porcentajeAfinidad != null)
-                      PeipBadge(
-                          tipo: PeipBadgeType.match,
-                          texto: '$porcentajeAfinidad% afinidad'),
-                  ]),
-                  const SizedBox(height: 4),
                   Text(evento.titulo,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -75,29 +82,61 @@ class EventCard extends StatelessWidget {
                           fontSize: 15,
                           color: AppColors.textPrimary)),
                   const SizedBox(height: 2),
-                  Text(
-                      '${fechaCorta(evento.fechaInicio)} · $ciudad · ${evento.lugar}',
+                  Text('${fechaCorta(evento.fechaInicio)} · $ciudad',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontSize: 12, color: AppColors.textSecondary)),
-                  const SizedBox(height: 4),
-                  precioMinimo == 0
-                      ? const PeipBadge(tipo: PeipBadgeType.gratis, texto: 'Gratis')
-                      : Text(precioTexto(precioMinimo),
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary)),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      precioMinimo == 0
+                          ? const PeipBadge(
+                              tipo: PeipBadgeType.gratis, texto: 'Gratis')
+                          : Text(precioTexto(precioMinimo),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.textPrimary)),
+                      const Row(children: [
+                        Text('Ver',
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.brand600)),
+                        Icon(Icons.arrow_forward,
+                            size: 14, color: AppColors.brand600),
+                      ]),
+                    ],
+                  ),
                 ],
               ),
             ),
-            IconButton(
-              tooltip: guardado ? 'Quitar de guardados' : 'Guardar',
-              onPressed: onToggleGuardado,
-              icon: Icon(guardado ? Icons.bookmark : Icons.bookmark_border,
-                  color: AppColors.brand600),
-            ),
-          ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BotonGuardar extends StatelessWidget {
+  final bool guardado;
+  final VoidCallback onTap;
+
+  const _BotonGuardar({required this.guardado, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.black.withValues(alpha: 0.35),
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(6),
+          child: Icon(guardado ? Icons.bookmark : Icons.bookmark_border,
+              color: Colors.white, size: 18),
         ),
       ),
     );

@@ -42,41 +42,69 @@ class AjustesPage extends StatelessWidget {
             style: const TextStyle(color: AppColors.textSecondary)),
         const SizedBox(height: 4),
         InfoRow(icon: Icons.location_on_outlined, texto: ciudad.nombre),
-        const SectionHeader(titulo: 'Privacidad'),
-        SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          value: usuario.personalizacionActiva,
-          onChanged: onTogglePersonalizacion,
-          title: const Text('Personalización activa'),
-          subtitle: const Text(
-              'Ordena por afinidad y muestra el porcentaje de cada evento.'),
+        const SizedBox(height: 16),
+        PeipSectionCard(
+          titulo: 'Privacidad',
+          child: InkWell(
+            borderRadius: BorderRadius.circular(8),
+            onTap: () => onTogglePersonalizacion(!usuario.personalizacionActiva),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Personalización activa',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary)),
+                      const SizedBox(height: 2),
+                      const Text(
+                          'Ordena por afinidad y muestra el porcentaje de cada evento.',
+                          style: TextStyle(
+                              fontSize: 12, color: AppColors.textSecondary)),
+                    ],
+                  ),
+                ),
+                IgnorePointer(
+                  child: Switch(
+                      value: usuario.personalizacionActiva,
+                      onChanged: onTogglePersonalizacion),
+                ),
+              ],
+            ),
+          ),
         ),
-        const SectionHeader(titulo: 'Tus intereses'),
-        GridView.count(
-          crossAxisCount: 2,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          childAspectRatio: 1.5,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
+        PeipSectionCard(
+          titulo: 'Tus intereses',
+          subtitulo: 'Los que elegiste al registrarte. Puedes cambiarlos cuando quieras.',
+          child: Wrap(spacing: 8, runSpacing: 8, children: [
             for (final c in categorias)
-              InterestTile(
-                categoria: c,
+              PeipChip(
+                label: c.nombre,
                 selected: usuario.intereses.contains(c.idCategoria),
+                icon: usuario.intereses.contains(c.idCategoria)
+                    ? Icons.check
+                    : null,
                 onTap: () => _toggleInteres(c.idCategoria),
               ),
-          ],
+          ]),
         ),
-        if (usuario.pesosEtiquetas.isNotEmpty) ...[
-          const SectionHeader(titulo: 'Lo que hemos inferido'),
-          for (final entrada in usuario.pesosEtiquetas.entries)
-            InferredTagRow(
-              etiqueta:
-                  etiquetas.firstWhere((t) => t.idEtiqueta == entrada.key).nombre,
-              peso: entrada.value,
-            ),
-        ],
+        if (usuario.pesosEtiquetas.isNotEmpty)
+          PeipSectionCard(
+            titulo: 'Lo que hemos inferido',
+            subtitulo: 'A partir de lo que has abierto y guardado.',
+            child: Column(children: [
+              for (final entrada in usuario.pesosEtiquetas.entries)
+                InferredTagRow(
+                  etiqueta: etiquetas
+                      .firstWhere((t) => t.idEtiqueta == entrada.key)
+                      .nombre,
+                  peso: entrada.value,
+                ),
+            ]),
+          ),
       ],
     );
   }

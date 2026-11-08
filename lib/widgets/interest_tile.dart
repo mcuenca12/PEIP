@@ -4,7 +4,9 @@ import '../model/models.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_icons.dart';
 
-/// Tile de área de interés, para la rejilla del onboarding.
+/// Tile de área de interés: bloque de color con el ícono y, debajo, el
+/// nombre en una franja aparte. Es el patrón del Figma — el nombre no va
+/// escrito encima del color, y el check es una insignia en la esquina.
 class InterestTile extends StatelessWidget {
   final Categoria categoria;
   final bool selected;
@@ -24,34 +26,45 @@ class InterestTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(14),
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: color,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-              color: selected ? AppColors.textPrimary : Colors.transparent,
-              width: 3),
+              color: selected ? AppColors.brand600 : AppColors.border,
+              width: selected ? 2 : 1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(iconoDe(categoria.icono), color: Colors.white, size: 24),
+            Expanded(
+              child: Stack(children: [
+                Container(width: double.infinity, color: color),
+                Center(
+                    child: Icon(iconoDe(categoria.icono),
+                        color: Colors.white, size: 28)),
                 if (selected)
-                  const Icon(Icons.check_circle, color: Colors.white, size: 20),
-              ],
+                  const Positioned(
+                    top: 6,
+                    right: 6,
+                    child: CircleAvatar(
+                      radius: 10,
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.check,
+                          size: 14, color: AppColors.brand600),
+                    ),
+                  ),
+              ]),
             ),
-            const Spacer(),
-            Text(categoria.nombre,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 13,
-                    height: 1.15)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              child: Text(categoria.nombre,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: selected ? AppColors.brand600 : AppColors.textPrimary,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13)),
+            ),
           ],
         ),
       ),

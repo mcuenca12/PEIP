@@ -21,7 +21,7 @@ void main() {
 
     // Ver los recomendados.
     expect(find.text('Recomendados para ti'), findsOneWidget);
-    expect(find.textContaining('% afinidad'), findsWidgets);
+    expect(find.textContaining('%'), findsWidgets);
 
     // Buscar "algo sobre liderazgo para mi equipo": el resultado no
     // contiene la palabra "liderazgo" en ningún título.
@@ -67,7 +67,7 @@ void main() {
     await tester.pumpAndSettle();
     final campos = find.byType(TextFormField);
     await tester.enterText(campos.at(0), 'Charla de cierre del recorrido');
-    await tester.enterText(campos.at(3), 'Auditorio Central');
+    await tester.enterText(campos.at(4), 'Auditorio Central'); // Lugar
     await tester.tap(find.text('Publicar'));
     await tester.pumpAndSettle();
     expect(
@@ -85,6 +85,6 @@ void main() {
     // Volver a Explorar y mostrar que cambió: sin porcentajes, por fecha.
     await tester.tap(find.text('Explorar'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('% afinidad'), findsNothing);
+    expect(find.textContaining('%'), findsNothing);
   });
 }
