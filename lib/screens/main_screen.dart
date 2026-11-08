@@ -25,6 +25,7 @@ class _MainScreenState extends State<MainScreen> {
   String _consulta = '';
   int? _categoriaFiltro;
   bool _usuarioListo = false;
+  int? _idRecienCreado;
 
   late Usuario _usuario;
   late final List<Evento> _eventos = List.of(MockData.eventos);
@@ -54,8 +55,14 @@ class _MainScreenState extends State<MainScreen> {
       ? _vigentes
       : _vigentes.where((e) => e.idCategoria == _categoriaFiltro).toList();
 
-  List<Evento> get _recomendados =>
-      ordenarRecomendados(_usuario, _porCategoria);
+  /// El recién creado se ancla arriba: la afinidad sola no lo garantiza
+  /// (nace sin etiquetas propias) y el enunciado pide que se vea de una.
+  List<Evento> get _recomendados {
+    final lista = ordenarRecomendados(_usuario, _porCategoria);
+    final idx = lista.indexWhere((e) => e.idEvento == _idRecienCreado);
+    if (idx <= 0) return lista;
+    return [lista.removeAt(idx), ...lista];
+  }
 
   ({List<Evento> eventos, bool coincidenciaExacta}) get _resultadoBusqueda {
     if (_consulta.isEmpty) {
@@ -138,7 +145,7 @@ class _MainScreenState extends State<MainScreen> {
     Navigator.pushNamed(context, AppRoutes.detalle,
         arguments: DetalleArgs(
           evento: evento,
-          entradas: _tiposEntrada.where((t) => t.idEvento == idEvento).toList(),
+          entradas: _entradasDe(idEvento),
           guardado: _estaGuardado(idEvento),
           esPropio: evento.idOrganizador == kOrganizadorPropio,
           porcentajeAfinidad: _usuario.personalizacionActiva
@@ -146,10 +153,80 @@ class _MainScreenState extends State<MainScreen> {
               : null,
           onToggleGuardado: () => _toggleGuardado(idEvento),
           onReservar: _reservar,
-          onEditar: () =>
-              Navigator.pushNamed(context, AppRoutes.crearEvento, arguments: evento),
+          onEditar: () => _editarEvento(evento),
           onEliminar: () => _eliminarEvento(idEvento),
         ));
+  }
+
+  List<TipoEntrada> _entradasDe(int idEvento) =>
+      _tiposEntrada.where((t) => t.idEvento == idEvento).toList();
+
+  void _editarEvento(Evento evento) => Navigator.pushNamed(
+        context,
+        AppRoutes.crearEvento,
+        arguments: CrearEventoArgs(
+          evento: evento,
+          entradasActuales: _entradasDe(evento.idEvento),
+          edicionesAnteriores: const [],
+          entradasDe: _entradasDe,
+          onGuardar: _guardarEvento,
+        ),
+      );
+
+  void _guardarEvento(Evento e, List<TipoEntrada> entradas) {
+    final nuevo = e.idEvento == 0;
+    final idEvento = nuevo
+        ? _eventos.fold(0, (m, x) => x.idEvento > m ? x.idEvento : m) + 1
+        : e.idEvento;
+    final guardado = Evento(
+      idEvento: idEvento,
+      titulo: e.titulo,
+      eslogan: e.eslogan,
+      descripcion: e.descripcion,
+      fechaInicio: e.fechaInicio,
+      fechaFin: e.fechaFin,
+      todoElDia: e.todoElDia,
+      lugar: e.lugar,
+      estado: e.estado,
+      aforo: e.aforo,
+      idCategoria: e.idCategoria,
+      idOrganizador: e.idOrganizador,
+      idCiudad: e.idCiudad,
+      idSerie: e.idSerie,
+      idEventoAnterior: e.idEventoAnterior,
+      idEtiquetas: e.idEtiquetas,
+    );
+    setState(() {
+      if (nuevo) {
+        _eventos.add(guardado);
+        _idRecienCreado = idEvento;
+      } else {
+        _eventos[_eventos.indexWhere((x) => x.idEvento == idEvento)] = guardado;
+        final conservadas = entradas.map((t) => t.idEntrada).toSet();
+        final quitadas = _tiposEntrada
+            .where((t) => t.idEvento == idEvento && !conservadas.contains(t.idEntrada))
+            .map((t) => t.idEntrada)
+            .toSet();
+        _tiposEntrada.removeWhere((t) => quitadas.contains(t.idEntrada));
+        _reservas.removeWhere((r) => quitadas.contains(r.idEntrada));
+        _tiposEntrada.removeWhere(
+            (t) => t.idEvento == idEvento && conservadas.contains(t.idEntrada));
+      }
+      for (final t in entradas) {
+        _tiposEntrada.add(TipoEntrada(
+          idEntrada: t.idEntrada != 0
+              ? t.idEntrada
+              : _tiposEntrada.fold(0, (m, x) => x.idEntrada > m ? x.idEntrada : m) + 1,
+          nombre: t.nombre,
+          precio: t.precio,
+          beneficios: t.beneficios,
+          idEvento: idEvento,
+        ));
+      }
+    });
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(nuevo ? 'Evento publicado.' : 'Cambios guardados.')));
   }
 
   void _reservar(int idEntrada, int cantidad) {
@@ -202,7 +279,18 @@ class _MainScreenState extends State<MainScreen> {
         ));
   }
 
-  void _crearEvento() => Navigator.pushNamed(context, AppRoutes.crearEvento);
+  void _crearEvento() => Navigator.pushNamed(
+        context,
+        AppRoutes.crearEvento,
+        arguments: CrearEventoArgs(
+          evento: null,
+          entradasActuales: const [],
+          edicionesAnteriores:
+              _eventos.where((e) => e.idOrganizador == kOrganizadorPropio).toList(),
+          entradasDe: _entradasDe,
+          onGuardar: _guardarEvento,
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {

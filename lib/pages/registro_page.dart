@@ -65,6 +65,7 @@ class _RegistroPageState extends State<RegistroPage> {
                 label: 'Ciudad',
                 child: DropdownButtonFormField<int>(
                   initialValue: _idCiudad,
+                  isExpanded: true,
                   decoration: const InputDecoration(
                     filled: true,
                     fillColor: AppColors.surface,

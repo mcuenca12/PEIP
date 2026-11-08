@@ -37,3 +37,22 @@ class TicketArgs {
 
   const TicketArgs({required this.ticket, required this.onCancelar});
 }
+
+/// Lo que recibe /crear-evento. [evento] null es creación; con evento, es
+/// edición. [edicionesAnteriores] solo aplica a creación (ver
+/// docs/pantallas.md, "Partir de una edición anterior").
+class CrearEventoArgs {
+  final Evento? evento;
+  final List<TipoEntrada> entradasActuales;
+  final List<Evento> edicionesAnteriores;
+  final List<TipoEntrada> Function(int idEvento) entradasDe;
+  final void Function(Evento evento, List<TipoEntrada> entradas) onGuardar;
+
+  const CrearEventoArgs({
+    required this.evento,
+    required this.entradasActuales,
+    required this.edicionesAnteriores,
+    required this.entradasDe,
+    required this.onGuardar,
+  });
+}
