@@ -33,22 +33,25 @@ class InterestTile extends StatelessWidget {
               width: 3),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(iconoDe(categoria.icono), color: Colors.white, size: 28),
+                Icon(iconoDe(categoria.icono), color: Colors.white, size: 24),
                 if (selected)
-                  const Icon(Icons.check_circle, color: Colors.white),
+                  const Icon(Icons.check_circle, color: Colors.white, size: 20),
               ],
             ),
+            const Spacer(),
             Text(categoria.nombre,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
-                    fontSize: 15)),
+                    fontSize: 13,
+                    height: 1.15)),
           ],
         ),
       ),
