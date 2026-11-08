@@ -10,6 +10,7 @@ import 'peip_badge.dart';
 class ResultRow extends StatelessWidget {
   final Evento evento;
   final Categoria categoria;
+  final int precioMinimo;
   final int? porcentajeAfinidad;
   final VoidCallback onTap;
 
@@ -17,6 +18,7 @@ class ResultRow extends StatelessWidget {
     super.key,
     required this.evento,
     required this.categoria,
+    required this.precioMinimo,
     required this.onTap,
     this.porcentajeAfinidad,
   });
@@ -33,7 +35,7 @@ class ResultRow extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: colorDeHex(categoria.color),
+              color: colorImagenEvento(evento.idEvento),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(iconoDe(categoria.icono),
@@ -60,9 +62,18 @@ class ResultRow extends StatelessWidget {
               ],
             ),
           ),
-          if (porcentajeAfinidad != null)
-            PeipBadge(
-                tipo: PeipBadgeType.match, texto: '$porcentajeAfinidad%'),
+          Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+            if (porcentajeAfinidad != null)
+              PeipBadge(tipo: PeipBadgeType.match, texto: '$porcentajeAfinidad%'),
+            const SizedBox(height: 4),
+            precioMinimo == 0
+                ? const PeipBadge(tipo: PeipBadgeType.gratis, texto: 'Gratis')
+                : Text(precioTexto(precioMinimo),
+                    style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary)),
+          ]),
         ]),
       ),
     );

@@ -53,14 +53,14 @@ class _DetalleEventoPageState extends State<DetalleEventoPage> {
   @override
   Widget build(BuildContext context) {
     final e = widget.evento;
-    final color = colorDeHex(widget.categoria.color);
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         Container(
           height: 140,
-          decoration:
-              BoxDecoration(color: color, borderRadius: BorderRadius.circular(18)),
+          decoration: BoxDecoration(
+              color: colorImagenEvento(e.idEvento),
+              borderRadius: BorderRadius.circular(18)),
           child: Center(
               child: Icon(iconoDe(widget.categoria.icono),
                   size: 64, color: Colors.white)),
@@ -73,9 +73,7 @@ class _DetalleEventoPageState extends State<DetalleEventoPage> {
               children: [
                 Wrap(spacing: 6, runSpacing: 4, children: [
                   PeipBadge(
-                      tipo: PeipBadgeType.categoria,
-                      texto: widget.categoria.nombre,
-                      color: color),
+                      tipo: PeipBadgeType.categoria, texto: widget.categoria.nombre),
                   if (widget.porcentajeAfinidad != null)
                     PeipBadge(
                         tipo: PeipBadgeType.match,

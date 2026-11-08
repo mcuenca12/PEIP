@@ -7,6 +7,7 @@ class GuardadosPage extends StatelessWidget {
   final List<Evento> eventos;
   final Categoria Function(int idCategoria) categoriaDe;
   final Ciudad Function(int idCiudad) ciudadDe;
+  final int Function(int idEvento) precioMinimoDe;
   final ValueChanged<int> onToggleGuardado;
   final ValueChanged<int> onAbrirEvento;
 
@@ -15,6 +16,7 @@ class GuardadosPage extends StatelessWidget {
     required this.eventos,
     required this.categoriaDe,
     required this.ciudadDe,
+    required this.precioMinimoDe,
     required this.onToggleGuardado,
     required this.onAbrirEvento,
   });
@@ -38,6 +40,7 @@ class GuardadosPage extends StatelessWidget {
             categoria: categoriaDe(e.idCategoria),
             ciudad: ciudadDe(e.idCiudad).nombre,
             guardado: true,
+            precioMinimo: precioMinimoDe(e.idEvento),
             onTap: () => onAbrirEvento(e.idEvento),
             onToggleGuardado: () => onToggleGuardado(e.idEvento),
           ),

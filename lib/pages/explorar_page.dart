@@ -15,6 +15,7 @@ class ExplorarPage extends StatefulWidget {
   final bool Function(int idEvento) estaGuardado;
   final bool personalizacionActiva;
   final int Function(Evento evento) afinidadDe;
+  final int Function(int idEvento) precioMinimoDe;
   final ValueChanged<String> onBuscar;
   final ValueChanged<int> onBorrarReciente;
   final ValueChanged<int> onToggleCategoria;
@@ -33,6 +34,7 @@ class ExplorarPage extends StatefulWidget {
     required this.estaGuardado,
     required this.personalizacionActiva,
     required this.afinidadDe,
+    required this.precioMinimoDe,
     required this.onBuscar,
     required this.onBorrarReciente,
     required this.onToggleCategoria,
@@ -123,6 +125,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
           categoria: widget.categoriaDe(e.idCategoria),
           ciudad: widget.ciudadDe(e.idCiudad).nombre,
           guardado: widget.estaGuardado(e.idEvento),
+          precioMinimo: widget.precioMinimoDe(e.idEvento),
           porcentajeAfinidad:
               widget.personalizacionActiva ? widget.afinidadDe(e) : null,
           onTap: () => widget.onAbrirEvento(e.idEvento),
@@ -145,6 +148,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
         ResultRow(
           evento: e,
           categoria: widget.categoriaDe(e.idCategoria),
+          precioMinimo: widget.precioMinimoDe(e.idEvento),
           porcentajeAfinidad:
               widget.personalizacionActiva ? widget.afinidadDe(e) : null,
           onTap: () => widget.onAbrirEvento(e.idEvento),

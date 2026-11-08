@@ -4,36 +4,40 @@ import '../theme/app_colors.dart';
 
 enum PeipBadgeType { match, categoria, gratis }
 
-/// Pastilla pequeña para afinidad, categoría o gratuidad.
+/// Pastilla pequeña para afinidad, categoría o gratuidad. Los colores son
+/// los del componente "Badge" de la galería de Figma: el de afinidad es
+/// oscuro con texto blanco, el de categoría es lavanda parejo para todas
+/// (no se tiñe por categoría), y el de gratis no lleva pastilla.
 class PeipBadge extends StatelessWidget {
   final PeipBadgeType tipo;
   final String texto;
-  final Color? color;
 
-  const PeipBadge({
-    super.key,
-    required this.tipo,
-    required this.texto,
-    this.color,
-  });
+  const PeipBadge({super.key, required this.tipo, required this.texto});
 
   @override
   Widget build(BuildContext context) {
-    final base = color ??
-        switch (tipo) {
-          PeipBadgeType.match => AppColors.brand600,
-          PeipBadgeType.categoria => AppColors.brand600,
-          PeipBadgeType.gratis => AppColors.success,
-        };
+    switch (tipo) {
+      case PeipBadgeType.gratis:
+        return Text(texto,
+            style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: AppColors.success));
+      case PeipBadgeType.match:
+        return _pastilla(fondo: AppColors.textPrimary, colorTexto: Colors.white);
+      case PeipBadgeType.categoria:
+        return _pastilla(
+            fondo: AppColors.brand50, colorTexto: AppColors.textPrimary);
+    }
+  }
+
+  Widget _pastilla({required Color fondo, required Color colorTexto}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: base.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(20),
-      ),
+      decoration: BoxDecoration(color: fondo, borderRadius: BorderRadius.circular(20)),
       child: Text(texto,
           style: TextStyle(
-              fontSize: 11, fontWeight: FontWeight.w700, color: base)),
+              fontSize: 11, fontWeight: FontWeight.w700, color: colorTexto)),
     );
   }
 }

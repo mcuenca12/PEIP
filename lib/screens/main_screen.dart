@@ -48,6 +48,11 @@ class _MainScreenState extends State<MainScreen> {
 
   Ciudad _ciudadDe(int id) => MockData.ciudades.firstWhere((c) => c.idCiudad == id);
 
+  int _precioMinimoDe(int idEvento) => _tiposEntrada
+      .where((t) => t.idEvento == idEvento)
+      .map((t) => t.precio)
+      .reduce((a, b) => a < b ? a : b);
+
   List<Evento> get _vigentes =>
       _eventos.where((e) => e.estado != 'cancelado').toList();
 
@@ -313,12 +318,14 @@ class _MainScreenState extends State<MainScreen> {
             onToggleCategoria: _toggleCategoriaFiltro,
             onToggleGuardado: _toggleGuardado,
             afinidadDe: (e) => calcularAfinidad(_usuario, e),
+            precioMinimoDe: _precioMinimoDe,
             onAbrirEvento: _abrirEvento,
           ),
           GuardadosPage(
             eventos: _misGuardados,
             categoriaDe: _categoriaDe,
             ciudadDe: _ciudadDe,
+            precioMinimoDe: _precioMinimoDe,
             onToggleGuardado: _toggleGuardado,
             onAbrirEvento: _abrirEvento,
           ),

@@ -12,6 +12,7 @@ class EventCard extends StatelessWidget {
   final Categoria categoria;
   final String ciudad;
   final bool guardado;
+  final int precioMinimo;
   final int? porcentajeAfinidad;
   final VoidCallback onTap;
   final VoidCallback onToggleGuardado;
@@ -22,6 +23,7 @@ class EventCard extends StatelessWidget {
     required this.categoria,
     required this.ciudad,
     required this.guardado,
+    required this.precioMinimo,
     required this.onTap,
     required this.onToggleGuardado,
     this.porcentajeAfinidad,
@@ -29,7 +31,7 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = colorDeHex(categoria.color);
+    final color = colorImagenEvento(evento.idEvento);
     return Card(
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 12),
@@ -58,10 +60,7 @@ class EventCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Wrap(spacing: 6, runSpacing: 4, children: [
-                    PeipBadge(
-                        tipo: PeipBadgeType.categoria,
-                        texto: categoria.nombre,
-                        color: color),
+                    PeipBadge(tipo: PeipBadgeType.categoria, texto: categoria.nombre),
                     if (porcentajeAfinidad != null)
                       PeipBadge(
                           tipo: PeipBadgeType.match,
@@ -82,6 +81,13 @@ class EventCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontSize: 12, color: AppColors.textSecondary)),
+                  const SizedBox(height: 4),
+                  precioMinimo == 0
+                      ? const PeipBadge(tipo: PeipBadgeType.gratis, texto: 'Gratis')
+                      : Text(precioTexto(precioMinimo),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary)),
                 ],
               ),
             ),

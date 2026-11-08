@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'app_colors.dart';
+
 /// Color hex (de Categoria.color) a Color de Flutter.
 Color colorDeHex(String hex) =>
     Color(int.parse(hex.replaceFirst('#', ''), radix: 16) | 0xFF000000);
+
+/// Color del bloque de imagen de un evento: la paleta rotativa de
+/// docs/diseno.md, independiente de la categoría (así es en el Figma).
+Color colorImagenEvento(int idEvento) =>
+    AppColors.imagenesEvento[idEvento % AppColors.imagenesEvento.length];
 
 /// Icono para el nombre simbólico de Categoria.icono (ver mock_data.dart).
 IconData iconoDe(String nombre) {
