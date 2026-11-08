@@ -46,3 +46,9 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Contexto de trabajo (briefing, convenciones, plan): se queda en el
+# disco para que cargue solo en próximas sesiones, pero no se entrega
+# en el repo que ve el profesor.
+/CLAUDE.md
+/docs/

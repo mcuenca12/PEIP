@@ -46,6 +46,8 @@ class _RegistroPageState extends State<RegistroPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const PasoIndicador(actual: 1, total: 3),
+              const SizedBox(height: 20),
               PeipFormField(
                   label: 'Nombre', child: PeipTextField(controller: _nombre)),
               const SizedBox(height: 14),

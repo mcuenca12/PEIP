@@ -3,6 +3,7 @@ export 'event_card.dart';
 export 'inferred_tag_row.dart';
 export 'info_row.dart';
 export 'interest_tile.dart';
+export 'paso_indicador.dart';
 export 'peip_badge.dart';
 export 'peip_button.dart';
 export 'peip_chip.dart';

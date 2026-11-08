@@ -31,6 +31,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const PasoIndicador(actual: 2, total: 3),
+          const SizedBox(height: 16),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

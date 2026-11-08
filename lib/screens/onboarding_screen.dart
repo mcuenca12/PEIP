@@ -16,7 +16,7 @@ class OnboardingScreen extends StatelessWidget {
         child: OnboardingPage(
           categorias: MockData.categorias,
           onTerminar: (intereses) => Navigator.pushReplacementNamed(
-              context, AppRoutes.main,
+              context, AppRoutes.preferencias,
               arguments: usuario.copyWith(intereses: intereses)),
         ),
       ),
