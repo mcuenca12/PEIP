@@ -297,6 +297,9 @@ class _MainScreenState extends State<MainScreen> {
         ),
       );
 
+  void _cerrarSesion() => Navigator.pushNamedAndRemoveUntil(
+      context, AppRoutes.login, (route) => false);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -341,6 +344,7 @@ class _MainScreenState extends State<MainScreen> {
             etiquetas: MockData.etiquetas,
             onTogglePersonalizacion: _togglePersonalizacion,
             onActualizarIntereses: _actualizarIntereses,
+            onCerrarSesion: _cerrarSesion,
           ),
         ]),
       ),

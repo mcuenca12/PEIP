@@ -3,6 +3,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../model/vistas.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_shadows.dart';
 import '../utils/formato.dart';
 import '../widgets/widgets.dart';
 
@@ -43,6 +44,7 @@ class TicketPage extends StatelessWidget {
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: AppColors.border),
+            boxShadow: AppShadows.tarjeta,
           ),
           child: Column(children: [
             QrImageView(data: r.codigoQr, size: 180),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/app_shadows.dart';
 import '../utils/formato.dart';
 
 /// Tarjeta de un ticket reservado (lista "Mis tickets").
@@ -26,33 +27,53 @@ class ReservaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
+    return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      color: AppColors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: AppColors.border),
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+        boxShadow: AppShadows.tarjeta,
       ),
-      child: ListTile(
-        onTap: onTap,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-        leading: Icon(Icons.qr_code_2,
-            size: 38, color: usada ? AppColors.textMuted : AppColors.brand600),
-        title: Text(titulo,
+      child: Card(
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        color: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: AppColors.border),
+        ),
+        child: ListTile(
+          onTap: onTap,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 6,
+          ),
+          leading: Icon(
+            Icons.qr_code_2,
+            size: 38,
+            color: usada ? AppColors.textMuted : AppColors.brand600,
+          ),
+          title: Text(
+            titulo,
             style: const TextStyle(
-                fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-        subtitle: Text(
+              fontWeight: FontWeight.w700,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          subtitle: Text(
             '$cantidad × $entrada · ${fechaCorta(fecha)}${usada ? ' · Usada' : ''}',
-            style: const TextStyle(color: AppColors.textSecondary)),
-        trailing: usada
-            ? null
-            : IconButton(
-                tooltip: 'Cancelar reserva',
-                icon:
-                    const Icon(Icons.delete_outline, color: AppColors.danger),
-                onPressed: onCancelar),
+            style: const TextStyle(color: AppColors.textSecondary),
+          ),
+          trailing: usada
+              ? null
+              : IconButton(
+                  tooltip: 'Cancelar reserva',
+                  icon: const Icon(
+                    Icons.delete_outline,
+                    color: AppColors.danger,
+                  ),
+                  onPressed: onCancelar,
+                ),
+        ),
       ),
     );
   }

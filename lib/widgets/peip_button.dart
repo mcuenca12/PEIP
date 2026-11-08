@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/app_shadows.dart';
 
 enum PeipButtonKind { primary, secondary, ghost, danger }
 
@@ -27,40 +28,58 @@ class PeipButton extends StatelessWidget {
       children: [
         if (icon != null) ...[Icon(icon, size: 18), const SizedBox(width: 8)],
         Flexible(
-          child: Text(label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontWeight: FontWeight.w600)),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
         ),
       ],
     );
-    final shape =
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(12));
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    );
     const pad = EdgeInsets.symmetric(vertical: 14, horizontal: 20);
 
     Widget button;
     switch (kind) {
       case PeipButtonKind.primary:
-        button = FilledButton(
-          onPressed: onPressed,
-          style: FilledButton.styleFrom(
-              backgroundColor: AppColors.brand600, padding: pad, shape: shape),
-          child: child,
+        button = Container(
+          decoration: onPressed == null
+              ? null
+              : const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                  boxShadow: AppShadows.boton,
+                ),
+          child: FilledButton(
+            onPressed: onPressed,
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.brand600,
+              padding: pad,
+              shape: shape,
+            ),
+            child: child,
+          ),
         );
       case PeipButtonKind.danger:
         button = FilledButton(
           onPressed: onPressed,
           style: FilledButton.styleFrom(
-              backgroundColor: AppColors.danger, padding: pad, shape: shape),
+            backgroundColor: AppColors.danger,
+            padding: pad,
+            shape: shape,
+          ),
           child: child,
         );
       case PeipButtonKind.secondary:
         button = OutlinedButton(
           onPressed: onPressed,
           style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.textPrimary,
-              side: const BorderSide(color: AppColors.border),
-              padding: pad,
-              shape: shape),
+            foregroundColor: AppColors.textPrimary,
+            side: const BorderSide(color: AppColors.border),
+            padding: pad,
+            shape: shape,
+          ),
           child: child,
         );
       case PeipButtonKind.ghost:

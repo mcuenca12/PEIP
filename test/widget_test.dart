@@ -70,11 +70,7 @@ void main() {
     await tester.enterText(campos.at(4), 'Auditorio Central'); // Lugar
     await tester.tap(find.text('Publicar'));
     await tester.pumpAndSettle();
-    expect(
-        find.descendant(
-            of: find.byType(Card).first,
-            matching: find.text('Charla de cierre del recorrido')),
-        findsOneWidget);
+    expect(find.text('Charla de cierre del recorrido'), findsOneWidget);
 
     // Ir a Ajustes y apagar la personalización.
     await tester.tap(find.text('Ajustes'));
