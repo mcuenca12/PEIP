@@ -157,9 +157,21 @@ class _MainScreenState extends State<MainScreen> {
               ? calcularAfinidad(_usuario, evento)
               : null,
           onToggleGuardado: () => _toggleGuardado(idEvento),
-          onReservar: _reservar,
+          onReservar: (idEntrada, cantidad) =>
+              _irAPagar(evento.titulo, idEntrada, cantidad),
           onEditar: () => _editarEvento(evento),
           onEliminar: () => _eliminarEvento(idEvento),
+        ));
+  }
+
+  void _irAPagar(String eventoTitulo, int idEntrada, int cantidad) {
+    final entrada = _tiposEntrada.firstWhere((t) => t.idEntrada == idEntrada);
+    Navigator.pushNamed(context, AppRoutes.pago,
+        arguments: PagoArgs(
+          eventoTitulo: eventoTitulo,
+          entrada: entrada,
+          cantidad: cantidad,
+          onConfirmar: () => _reservar(idEntrada, cantidad),
         ));
   }
 
@@ -248,7 +260,8 @@ class _MainScreenState extends State<MainScreen> {
     );
     setState(() => _reservas.add(reserva));
     final evento = _eventos.firstWhere((e) => e.idEvento == entrada.idEvento);
-    Navigator.pop(context);
+    // Hay que volver hasta Explorar: entre medio quedaron Detalle y Pago.
+    Navigator.popUntil(context, ModalRoute.withName(AppRoutes.main));
     Navigator.pushNamed(context, AppRoutes.ticket,
         arguments: TicketArgs(
           ticket: (reserva: reserva, entrada: entrada, evento: evento),

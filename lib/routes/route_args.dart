@@ -30,6 +30,23 @@ class DetalleArgs {
   });
 }
 
+/// Lo que recibe /pago: el resumen de la compra antes de confirmarla.
+/// Es simulado (sin pasarela real); queda listo para conectar en la
+/// siguiente entrega. [onConfirmar] es quien de verdad crea la Reserva.
+class PagoArgs {
+  final String eventoTitulo;
+  final TipoEntrada entrada;
+  final int cantidad;
+  final VoidCallback onConfirmar;
+
+  const PagoArgs({
+    required this.eventoTitulo,
+    required this.entrada,
+    required this.cantidad,
+    required this.onConfirmar,
+  });
+}
+
 /// Lo que recibe /ticket: la reserva ya resuelta y el callback de cancelar.
 class TicketArgs {
   final TicketVista ticket;

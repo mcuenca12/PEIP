@@ -56,6 +56,8 @@ class TicketPage extends StatelessWidget {
             _fila('Evento', e.titulo),
             _fila('Tipo de entrada', ticket.entrada.nombre),
             _fila('Cantidad', '${r.cantidad}'),
+            _fila('Total pagado',
+                precioTexto(r.cantidad * ticket.entrada.precio)),
             _fila('Lugar', e.lugar),
             _fila('Fecha', rangoFechas(e.fechaInicio, e.fechaFin, e.todoElDia)),
             _fila(

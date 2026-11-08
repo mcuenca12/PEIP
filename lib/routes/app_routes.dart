@@ -5,6 +5,7 @@ import '../screens/detalle_evento_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/main_screen.dart';
 import '../screens/onboarding_screen.dart';
+import '../screens/pago_screen.dart';
 import '../screens/preferencias_screen.dart';
 import '../screens/registro_screen.dart';
 import '../screens/ticket_screen.dart';
@@ -17,6 +18,7 @@ class AppRoutes {
   static const String main = '/main';
   static const String detalle = '/evento';
   static const String crearEvento = '/crear-evento';
+  static const String pago = '/pago';
   static const String ticket = '/ticket';
 
   static Map<String, WidgetBuilder> get routes => {
@@ -27,6 +29,7 @@ class AppRoutes {
         main: (context) => const MainScreen(),
         detalle: (context) => const DetalleEventoScreen(),
         crearEvento: (context) => const CrearEventoScreen(),
+        pago: (context) => const PagoScreen(),
         ticket: (context) => const TicketScreen(),
       };
 }

@@ -49,13 +49,25 @@ void main() {
     await tester.pump();
     expect(find.byIcon(Icons.bookmark), findsOneWidget);
 
-    // Reservar y ver el ticket con el QR.
+    // Elegir 2 entradas, confirmar el total y pagar (simulado) para ver
+    // el ticket con el QR.
     await tester.tap(find.text('General Access'));
     await tester.pump();
-    await tester.tap(find.text('Reservar'));
+    await tester.tap(find.byIcon(Icons.add_circle_outline));
+    await tester.pump();
+    expect(find.text('\$ 280.000'), findsOneWidget); // Total: 2 x $140.000
+    await tester.tap(find.text('Ir a pagar'));
     await tester.pumpAndSettle();
+
+    expect(find.widgetWithText(AppBar, 'Confirmar compra'), findsOneWidget);
+    expect(find.text('\$ 280.000'), findsOneWidget); // mismo total en el resumen
+    await tester.tap(find.widgetWithText(FilledButton, 'Confirmar compra'));
+    await tester.pump(const Duration(milliseconds: 700)); // delay simulado
+    await tester.pumpAndSettle();
+
     expect(find.text('Mi ticket'), findsOneWidget);
     expect(find.byType(QrImageView), findsOneWidget);
+    expect(find.text('\$ 280.000'), findsOneWidget); // total pagado correcto
 
     // Volver (Ticket se empujó sobre Explorar), limpiar la búsqueda y
     // crear un evento, que debe aparecer arriba en la lista.

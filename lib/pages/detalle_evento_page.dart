@@ -147,9 +147,28 @@ class _DetalleEventoPageState extends State<DetalleEventoPage> {
                 onPressed: _cantidad < 10 ? () => setState(() => _cantidad++) : null,
                 icon: const Icon(Icons.add_circle_outline)),
           ]),
+          if (_idEntrada != null) ...[
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Text('Total: ',
+                    style: TextStyle(color: AppColors.textSecondary)),
+                Text(
+                    precioTexto(widget.entradas
+                            .firstWhere((t) => t.idEntrada == _idEntrada)
+                            .precio *
+                        _cantidad),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 16,
+                        color: AppColors.textPrimary)),
+              ],
+            ),
+          ],
           const SizedBox(height: 8),
           PeipButton(
-            label: 'Reservar',
+            label: 'Ir a pagar',
             icon: Icons.confirmation_number_outlined,
             onPressed: _idEntrada == null
                 ? null
