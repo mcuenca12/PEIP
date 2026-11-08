@@ -43,8 +43,7 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  Categoria _categoriaDe(int id) =>
-      MockData.categorias.firstWhere((c) => c.idCategoria == id);
+  Categoria _categoriaDe(int id) => MockData.categorias.firstWhere((c) => c.idCategoria == id);
 
   Ciudad _ciudadDe(int id) => MockData.ciudades.firstWhere((c) => c.idCiudad == id);
 
@@ -53,15 +52,13 @@ class _MainScreenState extends State<MainScreen> {
       .map((t) => t.precio)
       .reduce((a, b) => a < b ? a : b);
 
-  List<Evento> get _vigentes =>
-      _eventos.where((e) => e.estado != 'cancelado').toList();
+  List<Evento> get _vigentes => _eventos.where((e) => e.estado != 'cancelado').toList();
 
   List<Evento> get _porCategoria => _categoriaFiltro == null
       ? _vigentes
       : _vigentes.where((e) => e.idCategoria == _categoriaFiltro).toList();
 
-  /// El recién creado se ancla arriba: la afinidad sola no lo garantiza
-  /// (nace sin etiquetas propias) y el enunciado pide que se vea de una.
+  // el recien creado se pone de primero, si no la afinidad lo manda al final
   List<Evento> get _recomendados {
     final lista = ordenarRecomendados(_usuario, _porCategoria);
     final idx = lista.indexWhere((e) => e.idEvento == _idRecienCreado);
@@ -74,7 +71,11 @@ class _MainScreenState extends State<MainScreen> {
       return (eventos: _recomendados, coincidenciaExacta: true);
     }
     final encontrados = buscarPorSignificado(
-        _consulta, _recomendados, _categoriaDe, MockData.etiquetas);
+      _consulta,
+      _recomendados,
+      _categoriaDe,
+      MockData.etiquetas,
+    );
     if (encontrados.isNotEmpty) {
       return (eventos: encontrados, coincidenciaExacta: true);
     }
@@ -82,9 +83,8 @@ class _MainScreenState extends State<MainScreen> {
     return (eventos: cercanos.toList(), coincidenciaExacta: false);
   }
 
-  List<BusquedaReciente> get _busquedasDelUsuario => (_busquedas
-          .where((b) => b.idUsuario == _usuario.idUsuario)
-          .toList()
+  List<BusquedaReciente> get _busquedasDelUsuario =>
+      (_busquedas.where((b) => b.idUsuario == _usuario.idUsuario).toList()
         ..sort((a, b) => b.fecha.compareTo(a.fecha)));
 
   void _buscar(String texto) {
@@ -93,22 +93,19 @@ class _MainScreenState extends State<MainScreen> {
       _consulta = t;
       if (t.isEmpty) return;
       final uid = _usuario.idUsuario;
-      _busquedas.removeWhere(
-          (b) => b.idUsuario == uid && b.texto.toLowerCase() == t.toLowerCase());
-      final siguiente =
-          _busquedas.fold(0, (m, b) => b.idBusqueda > m ? b.idBusqueda : m) + 1;
+      _busquedas.removeWhere((b) => b.idUsuario == uid && b.texto.toLowerCase() == t.toLowerCase());
+      final siguiente = _busquedas.fold(0, (m, b) => b.idBusqueda > m ? b.idBusqueda : m) + 1;
       _busquedas.add(BusquedaReciente(siguiente, t, DateTime.now(), uid));
     });
   }
 
-  void _borrarBusqueda(int id) =>
-      setState(() => _busquedas.removeWhere((b) => b.idBusqueda == id));
+  void _borrarBusqueda(int id) => setState(() => _busquedas.removeWhere((b) => b.idBusqueda == id));
 
   void _toggleCategoriaFiltro(int id) =>
       setState(() => _categoriaFiltro = _categoriaFiltro == id ? null : id);
 
-  bool _estaGuardado(int idEvento) => _guardados
-      .any((g) => g.idUsuario == _usuario.idUsuario && g.idEvento == idEvento);
+  bool _estaGuardado(int idEvento) =>
+      _guardados.any((g) => g.idUsuario == _usuario.idUsuario && g.idEvento == idEvento);
 
   void _toggleGuardado(int idEvento) {
     final uid = _usuario.idUsuario;
@@ -147,48 +144,53 @@ class _MainScreenState extends State<MainScreen> {
 
   void _abrirEvento(int idEvento) {
     final evento = _eventos.firstWhere((e) => e.idEvento == idEvento);
-    Navigator.pushNamed(context, AppRoutes.detalle,
-        arguments: DetalleArgs(
-          evento: evento,
-          entradas: _entradasDe(idEvento),
-          guardado: _estaGuardado(idEvento),
-          esPropio: evento.idOrganizador == kOrganizadorPropio,
-          porcentajeAfinidad: _usuario.personalizacionActiva
-              ? calcularAfinidad(_usuario, evento)
-              : null,
-          onToggleGuardado: () => _toggleGuardado(idEvento),
-          onReservar: (idEntrada, cantidad) =>
-              _irAPagar(evento.titulo, idEntrada, cantidad),
-          onEditar: () => _editarEvento(evento),
-          onEliminar: () => _eliminarEvento(idEvento),
-        ));
+    Navigator.pushNamed(
+      context,
+      AppRoutes.detalle,
+      arguments: DetalleArgs(
+        evento: evento,
+        entradas: _entradasDe(idEvento),
+        guardado: _estaGuardado(idEvento),
+        esPropio: evento.idOrganizador == kOrganizadorPropio,
+        porcentajeAfinidad: _usuario.personalizacionActiva
+            ? calcularAfinidad(_usuario, evento)
+            : null,
+        onToggleGuardado: () => _toggleGuardado(idEvento),
+        onReservar: (idEntrada, cantidad) => _irAPagar(evento.titulo, idEntrada, cantidad),
+        onEditar: () => _editarEvento(evento),
+        onEliminar: () => _eliminarEvento(idEvento),
+      ),
+    );
   }
 
   void _irAPagar(String eventoTitulo, int idEntrada, int cantidad) {
     final entrada = _tiposEntrada.firstWhere((t) => t.idEntrada == idEntrada);
-    Navigator.pushNamed(context, AppRoutes.pago,
-        arguments: PagoArgs(
-          eventoTitulo: eventoTitulo,
-          entrada: entrada,
-          cantidad: cantidad,
-          onConfirmar: () => _reservar(idEntrada, cantidad),
-        ));
+    Navigator.pushNamed(
+      context,
+      AppRoutes.pago,
+      arguments: PagoArgs(
+        eventoTitulo: eventoTitulo,
+        entrada: entrada,
+        cantidad: cantidad,
+        onConfirmar: () => _reservar(idEntrada, cantidad),
+      ),
+    );
   }
 
   List<TipoEntrada> _entradasDe(int idEvento) =>
       _tiposEntrada.where((t) => t.idEvento == idEvento).toList();
 
   void _editarEvento(Evento evento) => Navigator.pushNamed(
-        context,
-        AppRoutes.crearEvento,
-        arguments: CrearEventoArgs(
-          evento: evento,
-          entradasActuales: _entradasDe(evento.idEvento),
-          edicionesAnteriores: const [],
-          entradasDe: _entradasDe,
-          onGuardar: _guardarEvento,
-        ),
-      );
+    context,
+    AppRoutes.crearEvento,
+    arguments: CrearEventoArgs(
+      evento: evento,
+      entradasActuales: _entradasDe(evento.idEvento),
+      edicionesAnteriores: const [],
+      entradasDe: _entradasDe,
+      onGuardar: _guardarEvento,
+    ),
+  );
 
   void _guardarEvento(Evento e, List<TipoEntrada> entradas) {
     final nuevo = e.idEvento == 0;
@@ -227,28 +229,30 @@ class _MainScreenState extends State<MainScreen> {
         _tiposEntrada.removeWhere((t) => quitadas.contains(t.idEntrada));
         _reservas.removeWhere((r) => quitadas.contains(r.idEntrada));
         _tiposEntrada.removeWhere(
-            (t) => t.idEvento == idEvento && conservadas.contains(t.idEntrada));
+          (t) => t.idEvento == idEvento && conservadas.contains(t.idEntrada),
+        );
       }
       for (final t in entradas) {
-        _tiposEntrada.add(TipoEntrada(
-          idEntrada: t.idEntrada != 0
-              ? t.idEntrada
-              : _tiposEntrada.fold(0, (m, x) => x.idEntrada > m ? x.idEntrada : m) + 1,
-          nombre: t.nombre,
-          precio: t.precio,
-          beneficios: t.beneficios,
-          idEvento: idEvento,
-        ));
+        _tiposEntrada.add(
+          TipoEntrada(
+            idEntrada: t.idEntrada != 0
+                ? t.idEntrada
+                : _tiposEntrada.fold(0, (m, x) => x.idEntrada > m ? x.idEntrada : m) + 1,
+            nombre: t.nombre,
+            precio: t.precio,
+            beneficios: t.beneficios,
+            idEvento: idEvento,
+          ),
+        );
       }
     });
     Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(nuevo ? 'Evento publicado.' : 'Cambios guardados.')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(nuevo ? 'Evento publicado.' : 'Cambios guardados.')));
   }
 
   void _reservar(int idEntrada, int cantidad) {
-    final siguiente =
-        _reservas.fold(0, (m, r) => r.idReserva > m ? r.idReserva : m) + 1;
+    final siguiente = _reservas.fold(0, (m, r) => r.idReserva > m ? r.idReserva : m) + 1;
     final entrada = _tiposEntrada.firstWhere((t) => t.idEntrada == idEntrada);
     final reserva = Reserva(
       idReserva: siguiente,
@@ -260,13 +264,16 @@ class _MainScreenState extends State<MainScreen> {
     );
     setState(() => _reservas.add(reserva));
     final evento = _eventos.firstWhere((e) => e.idEvento == entrada.idEvento);
-    // Hay que volver hasta Explorar: entre medio quedaron Detalle y Pago.
+    // quitar Detalle y Pago de la pila antes de mostrar el ticket
     Navigator.popUntil(context, ModalRoute.withName(AppRoutes.main));
-    Navigator.pushNamed(context, AppRoutes.ticket,
-        arguments: TicketArgs(
-          ticket: (reserva: reserva, entrada: entrada, evento: evento),
-          onCancelar: () => _cerrarYCancelar(reserva.idReserva),
-        ));
+    Navigator.pushNamed(
+      context,
+      AppRoutes.ticket,
+      arguments: TicketArgs(
+        ticket: (reserva: reserva, entrada: entrada, evento: evento),
+        onCancelar: () => _cerrarYCancelar(reserva.idReserva),
+      ),
+    );
   }
 
   void _eliminarEvento(int idEvento) {
@@ -290,76 +297,78 @@ class _MainScreenState extends State<MainScreen> {
 
   void _abrirTicket(int idReserva) {
     final ticket = _misTickets.firstWhere((t) => t.reserva.idReserva == idReserva);
-    Navigator.pushNamed(context, AppRoutes.ticket,
-        arguments: TicketArgs(
-          ticket: ticket,
-          onCancelar: () => _cerrarYCancelar(idReserva),
-        ));
+    Navigator.pushNamed(
+      context,
+      AppRoutes.ticket,
+      arguments: TicketArgs(ticket: ticket, onCancelar: () => _cerrarYCancelar(idReserva)),
+    );
   }
 
   void _crearEvento() => Navigator.pushNamed(
-        context,
-        AppRoutes.crearEvento,
-        arguments: CrearEventoArgs(
-          evento: null,
-          entradasActuales: const [],
-          edicionesAnteriores:
-              _eventos.where((e) => e.idOrganizador == kOrganizadorPropio).toList(),
-          entradasDe: _entradasDe,
-          onGuardar: _guardarEvento,
-        ),
-      );
+    context,
+    AppRoutes.crearEvento,
+    arguments: CrearEventoArgs(
+      evento: null,
+      entradasActuales: const [],
+      edicionesAnteriores: _eventos.where((e) => e.idOrganizador == kOrganizadorPropio).toList(),
+      entradasDe: _entradasDe,
+      onGuardar: _guardarEvento,
+    ),
+  );
 
-  void _cerrarSesion() => Navigator.pushNamedAndRemoveUntil(
-      context, AppRoutes.login, (route) => false);
+  void _cerrarSesion() =>
+      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (route) => false);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(_titulos[_tab])),
       body: SafeArea(
-        child: IndexedStack(index: _tab, children: [
-          ExplorarPage(
-            resultado: _resultadoBusqueda,
-            consulta: _consulta,
-            recientes: _busquedasDelUsuario,
-            categorias: MockData.categorias,
-            categoriaFiltro: _categoriaFiltro,
-            categoriaDe: _categoriaDe,
-            ciudadDe: _ciudadDe,
-            estaGuardado: _estaGuardado,
-            personalizacionActiva: _usuario.personalizacionActiva,
-            onBuscar: _buscar,
-            onBorrarReciente: _borrarBusqueda,
-            onToggleCategoria: _toggleCategoriaFiltro,
-            onToggleGuardado: _toggleGuardado,
-            afinidadDe: (e) => calcularAfinidad(_usuario, e),
-            precioMinimoDe: _precioMinimoDe,
-            onAbrirEvento: _abrirEvento,
-          ),
-          GuardadosPage(
-            eventos: _misGuardados,
-            categoriaDe: _categoriaDe,
-            ciudadDe: _ciudadDe,
-            precioMinimoDe: _precioMinimoDe,
-            onToggleGuardado: _toggleGuardado,
-            onAbrirEvento: _abrirEvento,
-          ),
-          MisTicketsPage(
-            tickets: _misTickets,
-            onCancelar: _cancelarReserva,
-            onAbrirTicket: _abrirTicket,
-          ),
-          AjustesPage(
-            usuario: _usuario,
-            ciudad: _ciudadDe(_usuario.idCiudad),
-            categorias: MockData.categorias,
-            etiquetas: MockData.etiquetas,
-            onTogglePersonalizacion: _togglePersonalizacion,
-            onActualizarIntereses: _actualizarIntereses,
-            onCerrarSesion: _cerrarSesion,
-          ),
-        ]),
+        child: IndexedStack(
+          index: _tab,
+          children: [
+            ExplorarPage(
+              resultado: _resultadoBusqueda,
+              consulta: _consulta,
+              recientes: _busquedasDelUsuario,
+              categorias: MockData.categorias,
+              categoriaFiltro: _categoriaFiltro,
+              categoriaDe: _categoriaDe,
+              ciudadDe: _ciudadDe,
+              estaGuardado: _estaGuardado,
+              personalizacionActiva: _usuario.personalizacionActiva,
+              onBuscar: _buscar,
+              onBorrarReciente: _borrarBusqueda,
+              onToggleCategoria: _toggleCategoriaFiltro,
+              onToggleGuardado: _toggleGuardado,
+              afinidadDe: (e) => calcularAfinidad(_usuario, e),
+              precioMinimoDe: _precioMinimoDe,
+              onAbrirEvento: _abrirEvento,
+            ),
+            GuardadosPage(
+              eventos: _misGuardados,
+              categoriaDe: _categoriaDe,
+              ciudadDe: _ciudadDe,
+              precioMinimoDe: _precioMinimoDe,
+              onToggleGuardado: _toggleGuardado,
+              onAbrirEvento: _abrirEvento,
+            ),
+            MisTicketsPage(
+              tickets: _misTickets,
+              onCancelar: _cancelarReserva,
+              onAbrirTicket: _abrirTicket,
+            ),
+            AjustesPage(
+              usuario: _usuario,
+              ciudad: _ciudadDe(_usuario.idCiudad),
+              categorias: MockData.categorias,
+              etiquetas: MockData.etiquetas,
+              onTogglePersonalizacion: _togglePersonalizacion,
+              onActualizarIntereses: _actualizarIntereses,
+              onCerrarSesion: _cerrarSesion,
+            ),
+          ],
+        ),
       ),
       floatingActionButton: _tab == 0
           ? FloatingActionButton(
@@ -373,21 +382,25 @@ class _MainScreenState extends State<MainScreen> {
         onDestinationSelected: (i) => setState(() => _tab = i),
         destinations: const [
           NavigationDestination(
-              icon: Icon(Icons.explore_outlined),
-              selectedIcon: Icon(Icons.explore),
-              label: 'Explorar'),
+            icon: Icon(Icons.explore_outlined),
+            selectedIcon: Icon(Icons.explore),
+            label: 'Explorar',
+          ),
           NavigationDestination(
-              icon: Icon(Icons.bookmark_border),
-              selectedIcon: Icon(Icons.bookmark),
-              label: 'Guardados'),
+            icon: Icon(Icons.bookmark_border),
+            selectedIcon: Icon(Icons.bookmark),
+            label: 'Guardados',
+          ),
           NavigationDestination(
-              icon: Icon(Icons.confirmation_num_outlined),
-              selectedIcon: Icon(Icons.confirmation_num),
-              label: 'Tickets'),
+            icon: Icon(Icons.confirmation_num_outlined),
+            selectedIcon: Icon(Icons.confirmation_num),
+            label: 'Tickets',
+          ),
           NavigationDestination(
-              icon: Icon(Icons.settings_outlined),
-              selectedIcon: Icon(Icons.settings),
-              label: 'Ajustes'),
+            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings),
+            label: 'Ajustes',
+          ),
         ],
       ),
     );

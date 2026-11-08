@@ -3,20 +3,13 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_shadows.dart';
 
-/// Agrupa un bloque de formulario bajo un título, en una tarjeta propia.
-/// Del patrón de "Publicar un evento" en Figma (Información básica, Cuándo,
-/// Dónde…), que agrupaba en paneles en vez de un formulario plano.
+// agrupa un pedazo de formulario bajo un título, en su propia tarjeta
 class PeipSectionCard extends StatelessWidget {
   final String titulo;
   final String? subtitulo;
   final Widget child;
 
-  const PeipSectionCard({
-    super.key,
-    required this.titulo,
-    required this.child,
-    this.subtitulo,
-  });
+  const PeipSectionCard({super.key, required this.titulo, required this.child, this.subtitulo});
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +35,7 @@ class PeipSectionCard extends StatelessWidget {
           ),
           if (subtitulo != null) ...[
             const SizedBox(height: 2),
-            Text(
-              subtitulo!,
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppColors.textSecondary,
-              ),
-            ),
+            Text(subtitulo!, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
           ],
           const SizedBox(height: 12),
           child,

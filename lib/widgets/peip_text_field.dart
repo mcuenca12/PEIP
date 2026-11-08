@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// El input en sí, sin etiqueta. Para el campo con etiqueta, ver
-/// [PeipFormField].
+// sin etiqueta, para eso está PeipFormField
 class PeipTextField extends StatelessWidget {
   final String? hint;
   final TextEditingController? controller;
@@ -44,8 +43,8 @@ class PeipTextField extends StatelessWidget {
         border: border,
         enabledBorder: border,
         focusedBorder: border.copyWith(
-            borderSide:
-                const BorderSide(color: AppColors.brand600, width: 1.6)),
+          borderSide: const BorderSide(color: AppColors.brand600, width: 1.6),
+        ),
       ),
     );
   }

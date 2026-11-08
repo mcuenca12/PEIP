@@ -4,10 +4,7 @@ import '../theme/app_colors.dart';
 
 enum PeipBadgeType { match, categoria, gratis }
 
-/// Pastilla pequeña para afinidad, categoría o gratuidad. Los colores son
-/// los del componente "Badge" de la galería de Figma: el de afinidad es
-/// oscuro con texto blanco, el de categoría es lavanda parejo para todas
-/// (no se tiñe por categoría), y el de gratis no lleva pastilla.
+// el badge de categoria no cambia de color según la categoría
 class PeipBadge extends StatelessWidget {
   final PeipBadgeType tipo;
   final String texto;
@@ -18,16 +15,18 @@ class PeipBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (tipo) {
       case PeipBadgeType.gratis:
-        return Text(texto,
-            style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: AppColors.success));
+        return Text(
+          texto,
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            color: AppColors.success,
+          ),
+        );
       case PeipBadgeType.match:
         return _pastilla(fondo: AppColors.textPrimary, colorTexto: Colors.white);
       case PeipBadgeType.categoria:
-        return _pastilla(
-            fondo: AppColors.brand50, colorTexto: AppColors.textPrimary);
+        return _pastilla(fondo: AppColors.brand50, colorTexto: AppColors.textPrimary);
     }
   }
 
@@ -35,9 +34,10 @@ class PeipBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(color: fondo, borderRadius: BorderRadius.circular(20)),
-      child: Text(texto,
-          style: TextStyle(
-              fontSize: 11, fontWeight: FontWeight.w700, color: colorTexto)),
+      child: Text(
+        texto,
+        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colorTexto),
+      ),
     );
   }
 }

@@ -7,10 +7,6 @@ import '../theme/app_shadows.dart';
 import '../utils/formato.dart';
 import 'peip_badge.dart';
 
-/// Tarjeta de evento para listas (recomendados, guardados). Imagen arriba
-/// con los badges superpuestos y el botón de guardar, como en el
-/// componente "Event Card" de la galería de Figma — antes tenía un bloque
-/// de ícono a la izquierda y el contenido al lado, que no era el patrón real.
 class EventCard extends StatelessWidget {
   final Evento evento;
   final Categoria categoria;
@@ -55,34 +51,22 @@ class EventCard extends StatelessWidget {
               children: [
                 Stack(
                   children: [
-                    Container(
-                      height: 120,
-                      color: colorImagenEvento(evento.idEvento),
-                    ),
+                    Container(height: 120, color: colorImagenEvento(evento.idEvento)),
                     if (porcentajeAfinidad != null)
                       Positioned(
                         top: 10,
                         left: 10,
-                        child: PeipBadge(
-                          tipo: PeipBadgeType.match,
-                          texto: '$porcentajeAfinidad%',
-                        ),
+                        child: PeipBadge(tipo: PeipBadgeType.match, texto: '$porcentajeAfinidad%'),
                       ),
                     Positioned(
                       bottom: 10,
                       left: 10,
-                      child: PeipBadge(
-                        tipo: PeipBadgeType.categoria,
-                        texto: categoria.nombre,
-                      ),
+                      child: PeipBadge(tipo: PeipBadgeType.categoria, texto: categoria.nombre),
                     ),
                     Positioned(
                       top: 8,
                       right: 8,
-                      child: _BotonGuardar(
-                        guardado: guardado,
-                        onTap: onToggleGuardado,
-                      ),
+                      child: _BotonGuardar(guardado: guardado, onTap: onToggleGuardado),
                     ),
                   ],
                 ),
@@ -106,20 +90,14 @@ class EventCard extends StatelessWidget {
                         '${fechaCorta(evento.fechaInicio)} · $ciudad',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.textSecondary,
-                        ),
+                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
                       ),
                       const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           precioMinimo == 0
-                              ? const PeipBadge(
-                                  tipo: PeipBadgeType.gratis,
-                                  texto: 'Gratis',
-                                )
+                              ? const PeipBadge(tipo: PeipBadgeType.gratis, texto: 'Gratis')
                               : Text(
                                   precioTexto(precioMinimo),
                                   style: const TextStyle(
@@ -137,11 +115,7 @@ class EventCard extends StatelessWidget {
                                   color: AppColors.brand600,
                                 ),
                               ),
-                              Icon(
-                                Icons.arrow_forward,
-                                size: 14,
-                                color: AppColors.brand600,
-                              ),
+                              Icon(Icons.arrow_forward, size: 14, color: AppColors.brand600),
                             ],
                           ),
                         ],

@@ -7,12 +7,10 @@ import '../widgets/widgets.dart';
 class RegistroPage extends StatefulWidget {
   final List<Ciudad> ciudades;
 
-  /// Devuelve un mensaje de error, o null si el registro fue exitoso.
-  final String? Function(
-      String nombre, String email, String password, int idCiudad) onRegistro;
+  // null si quedó bien, si no el mensaje de error
+  final String? Function(String nombre, String email, String password, int idCiudad) onRegistro;
 
-  const RegistroPage(
-      {super.key, required this.ciudades, required this.onRegistro});
+  const RegistroPage({super.key, required this.ciudades, required this.onRegistro});
 
   @override
   State<RegistroPage> createState() => _RegistroPageState();
@@ -33,8 +31,8 @@ class _RegistroPageState extends State<RegistroPage> {
     super.dispose();
   }
 
-  void _submit() => setState(() => _error = widget.onRegistro(
-      _nombre.text, _email.text, _pass.text, _idCiudad));
+  void _submit() =>
+      setState(() => _error = widget.onRegistro(_nombre.text, _email.text, _pass.text, _idCiudad));
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +47,13 @@ class _RegistroPageState extends State<RegistroPage> {
               const PasoIndicador(actual: 1, total: 3),
               const SizedBox(height: 20),
               PeipFormField(
-                  label: 'Nombre', child: PeipTextField(controller: _nombre)),
+                label: 'Nombre',
+                child: PeipTextField(controller: _nombre),
+              ),
               const SizedBox(height: 14),
               PeipFormField(
                 label: 'Correo',
-                child: PeipTextField(
-                    controller: _email,
-                    keyboardType: TextInputType.emailAddress),
+                child: PeipTextField(controller: _email, keyboardType: TextInputType.emailAddress),
               ),
               const SizedBox(height: 14),
               PeipFormField(
@@ -75,8 +73,7 @@ class _RegistroPageState extends State<RegistroPage> {
                   ),
                   items: [
                     for (final c in widget.ciudades)
-                      DropdownMenuItem(
-                          value: c.idCiudad, child: Text(c.nombre)),
+                      DropdownMenuItem(value: c.idCiudad, child: Text(c.nombre)),
                   ],
                   onChanged: (v) => setState(() => _idCiudad = v!),
                 ),

@@ -6,7 +6,6 @@ import '../theme/app_icons.dart';
 import '../utils/formato.dart';
 import 'peip_badge.dart';
 
-/// Fila horizontal de resultados de búsqueda.
 class ResultRow extends StatelessWidget {
   final Evento evento;
   final Categoria categoria;
@@ -30,51 +29,61 @@ class ResultRow extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Row(children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: colorImagenEvento(evento.idEvento),
-              borderRadius: BorderRadius.circular(10),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: colorImagenEvento(evento.idEvento),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(iconoDe(categoria.icono), color: Colors.white, size: 22),
             ),
-            child: Icon(iconoDe(categoria.icono),
-                color: Colors.white, size: 22),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(evento.titulo,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    evento.titulo,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
-                        color: AppColors.textPrimary)),
-                Text(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  Text(
                     '${categoria.nombre} · ${fechaCorta(evento.fechaInicio)}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontSize: 12, color: AppColors.textSecondary)),
+                    style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                if (porcentajeAfinidad != null)
+                  PeipBadge(tipo: PeipBadgeType.match, texto: '$porcentajeAfinidad%'),
+                const SizedBox(height: 4),
+                precioMinimo == 0
+                    ? const PeipBadge(tipo: PeipBadgeType.gratis, texto: 'Gratis')
+                    : Text(
+                        precioTexto(precioMinimo),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
               ],
             ),
-          ),
-          Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            if (porcentajeAfinidad != null)
-              PeipBadge(tipo: PeipBadgeType.match, texto: '$porcentajeAfinidad%'),
-            const SizedBox(height: 4),
-            precioMinimo == 0
-                ? const PeipBadge(tipo: PeipBadgeType.gratis, texto: 'Gratis')
-                : Text(precioTexto(precioMinimo),
-                    style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary)),
-          ]),
-        ]),
+          ],
+        ),
       ),
     );
   }

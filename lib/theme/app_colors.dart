@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Tokens exactos de docs/diseno.md (archivo de Figma del equipo).
 class AppColors {
   static const brand600 = Color(0xFF5454E9);
   static const brand400 = Color(0xFF7B7BF2);
@@ -14,7 +13,7 @@ class AppColors {
   static const success = Color(0xFF22C582);
   static const danger = Color(0xFFD94040);
 
-  /// Bloque de color para tarjetas de evento mientras no haya fotos.
+  // colores de fondo mientras no hay fotos de los eventos
   static const imagenesEvento = [
     Color(0xFF736BC7),
     Color(0xFFB87A66),

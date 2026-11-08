@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// Barra de búsqueda. Mantiene solo el controlador del texto (estado de UI);
-/// reporta el texto enviado con [onSubmitted].
 class PeipSearchBar extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String> onSubmitted;
@@ -29,8 +27,7 @@ class PeipSearchBar extends StatelessWidget {
       decoration: InputDecoration(
         hintText: 'Busca por lo que quieres aprender o resolver…',
         prefixIcon: const Icon(Icons.search),
-        suffixIcon:
-            IconButton(icon: const Icon(Icons.close), onPressed: onClear),
+        suffixIcon: IconButton(icon: const Icon(Icons.close), onPressed: onClear),
         filled: true,
         fillColor: AppColors.surface,
         border: border,

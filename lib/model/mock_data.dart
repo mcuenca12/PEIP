@@ -1,18 +1,13 @@
 import 'models.dart';
 
-/// Organizador "propio": sus eventos se pueden crear, editar y eliminar
-/// desde el prototipo. Es la Universidad Icesi, coherente con el usuario de
-/// prueba (ana.torres@icesi.edu.co).
+// el organizador del usuario de prueba, sus eventos se pueden editar
 const int kOrganizadorPropio = 3;
 
-/// "Hoy" fijo del prototipo, para que los datos semilla siempre tengan sentido.
 final DateTime kHoy = DateTime(2026, 11, 5);
 
-/// Hash simulado de contraseña (el backend real usará bcrypt/argon2).
+// hash falso, nada de bcrypt aquí
 String hashSimulado(String password) => 'h\$${password.hashCode}';
 
-/// Datos semilla coherentes con el MER de PEIP y con docs/datos-semilla.md:
-/// dominio académico y profesional, no cultural.
 class MockData {
   static const ciudades = [
     Ciudad(1, 'Bogotá'),
@@ -22,9 +17,7 @@ class MockData {
     Ciudad(5, 'Bucaramanga'),
   ];
 
-  // Colores e iconos de categoría son una elección propia: el MCP de Figma
-  // no tiene cuota disponible (ver docs/plan.md), así que no se pudieron
-  // leer los exactos del archivo de diseño.
+  // colores inventados, no tuvimos forma de sacarlos del Figma
   static const categorias = [
     Categoria(1, 'Technology & Data', 'tech', '#2563EB'),
     Categoria(2, 'Leadership', 'leadership', '#7C3AED'),
@@ -63,9 +56,7 @@ class MockData {
     Organizador(5, 'Centro de Convenciones Ágora'),
   ];
 
-  static const series = [
-    SerieEvento(1, 'Data Analytics Bootcamp', 'semestral', 2, 1),
-  ];
+  static const series = [SerieEvento(1, 'Data Analytics Bootcamp', 'semestral', 2, 1)];
 
   static final usuarios = <Usuario>[
     Usuario(
@@ -304,97 +295,64 @@ class MockData {
 
   static const tiposEntrada = <TipoEntrada>[
     TipoEntrada(
-        idEntrada: 1,
-        nombre: 'General Access',
-        precio: 85000,
-        beneficios: 'Acceso a conferencias y zona de innovación',
-        idEvento: 1),
+      idEntrada: 1,
+      nombre: 'General Access',
+      precio: 85000,
+      beneficios: 'Acceso a conferencias y zona de innovación',
+      idEvento: 1,
+    ),
     TipoEntrada(
-        idEntrada: 2,
-        nombre: 'Professional',
-        precio: 180000,
-        beneficios: 'Incluye talleres y almuerzo los tres días',
-        idEvento: 1),
+      idEntrada: 2,
+      nombre: 'Professional',
+      precio: 180000,
+      beneficios: 'Incluye talleres y almuerzo los tres días',
+      idEvento: 1,
+    ),
     TipoEntrada(
-        idEntrada: 3,
-        nombre: 'Corporate',
-        precio: 320000,
-        beneficios: 'Cupo para equipo de hasta 3 personas y sesión privada',
-        idEvento: 1),
+      idEntrada: 3,
+      nombre: 'Corporate',
+      precio: 320000,
+      beneficios: 'Cupo para equipo de hasta 3 personas y sesión privada',
+      idEvento: 1,
+    ),
     TipoEntrada(
-        idEntrada: 4,
-        nombre: 'General Access',
-        precio: 120000,
-        beneficios: 'Acceso a todas las charlas',
-        idEvento: 2),
+      idEntrada: 4,
+      nombre: 'General Access',
+      precio: 120000,
+      beneficios: 'Acceso a todas las charlas',
+      idEvento: 2,
+    ),
     TipoEntrada(
-        idEntrada: 5,
-        nombre: 'Professional',
-        precio: 220000,
-        beneficios: 'Incluye los talleres prácticos',
-        idEvento: 2),
+      idEntrada: 5,
+      nombre: 'Professional',
+      precio: 220000,
+      beneficios: 'Incluye los talleres prácticos',
+      idEvento: 2,
+    ),
+    TipoEntrada(idEntrada: 6, nombre: 'General Access', precio: 95000, idEvento: 3),
+    TipoEntrada(idEntrada: 7, nombre: 'General Access', precio: 60000, idEvento: 4),
     TipoEntrada(
-        idEntrada: 6,
-        nombre: 'General Access',
-        precio: 95000,
-        idEvento: 3),
+      idEntrada: 8,
+      nombre: 'General Access',
+      precio: 150000,
+      beneficios: 'Materiales incluidos',
+      idEvento: 5,
+    ),
+    TipoEntrada(idEntrada: 9, nombre: 'General Access', precio: 190000, idEvento: 6),
+    TipoEntrada(idEntrada: 10, nombre: 'General Access', precio: 210000, idEvento: 7),
     TipoEntrada(
-        idEntrada: 7,
-        nombre: 'General Access',
-        precio: 60000,
-        idEvento: 4),
-    TipoEntrada(
-        idEntrada: 8,
-        nombre: 'General Access',
-        precio: 150000,
-        beneficios: 'Materiales incluidos',
-        idEvento: 5),
-    TipoEntrada(
-        idEntrada: 9,
-        nombre: 'General Access',
-        precio: 190000,
-        idEvento: 6),
-    TipoEntrada(
-        idEntrada: 10,
-        nombre: 'General Access',
-        precio: 210000,
-        idEvento: 7),
-    TipoEntrada(
-        idEntrada: 11,
-        nombre: 'Professional',
-        precio: 350000,
-        beneficios: 'Incluye mentoría individual post-bootcamp',
-        idEvento: 7),
-    TipoEntrada(
-        idEntrada: 12,
-        nombre: 'Entrada libre',
-        precio: 0,
-        idEvento: 8),
-    TipoEntrada(
-        idEntrada: 13,
-        nombre: 'Entrada libre',
-        precio: 0,
-        idEvento: 9),
-    TipoEntrada(
-        idEntrada: 14,
-        nombre: 'General Access',
-        precio: 140000,
-        idEvento: 10),
-    TipoEntrada(
-        idEntrada: 15,
-        nombre: 'General Access',
-        precio: 160000,
-        idEvento: 11),
-    TipoEntrada(
-        idEntrada: 16,
-        nombre: 'General Access',
-        precio: 130000,
-        idEvento: 12),
-    TipoEntrada(
-        idEntrada: 17,
-        nombre: 'General Access',
-        precio: 145000,
-        idEvento: 13),
+      idEntrada: 11,
+      nombre: 'Professional',
+      precio: 350000,
+      beneficios: 'Incluye mentoría individual post-bootcamp',
+      idEvento: 7,
+    ),
+    TipoEntrada(idEntrada: 12, nombre: 'Entrada libre', precio: 0, idEvento: 8),
+    TipoEntrada(idEntrada: 13, nombre: 'Entrada libre', precio: 0, idEvento: 9),
+    TipoEntrada(idEntrada: 14, nombre: 'General Access', precio: 140000, idEvento: 10),
+    TipoEntrada(idEntrada: 15, nombre: 'General Access', precio: 160000, idEvento: 11),
+    TipoEntrada(idEntrada: 16, nombre: 'General Access', precio: 130000, idEvento: 12),
+    TipoEntrada(idEntrada: 17, nombre: 'General Access', precio: 145000, idEvento: 13),
   ];
 
   static final reservas = <Reserva>[

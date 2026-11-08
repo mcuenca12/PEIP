@@ -5,8 +5,7 @@ import '../theme/app_colors.dart';
 import '../utils/formato.dart';
 import '../widgets/widgets.dart';
 
-/// Confirmación de compra, simulada: no pide datos reales de pago. Queda
-/// lista para conectar una pasarela de verdad en la siguiente entrega.
+// pago simulado, no pide datos reales todavía
 class PagoPage extends StatefulWidget {
   final String eventoTitulo;
   final TipoEntrada entrada;
@@ -41,20 +40,26 @@ class _PagoPageState extends State<PagoPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(etiqueta,
-              style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontWeight: destacado ? FontWeight.w700 : FontWeight.w400)),
+          Text(
+            etiqueta,
+            style: TextStyle(
+              color: AppColors.textSecondary,
+              fontWeight: destacado ? FontWeight.w700 : FontWeight.w400,
+            ),
+          ),
           const SizedBox(width: 12),
           Flexible(
-            child: Text(valor,
-                textAlign: TextAlign.end,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: destacado ? 18 : 14,
-                    color: AppColors.textPrimary)),
+            child: Text(
+              valor,
+              textAlign: TextAlign.end,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: destacado ? 18 : 14,
+                color: AppColors.textPrimary,
+              ),
+            ),
           ),
         ],
       ),
@@ -66,35 +71,43 @@ class _PagoPageState extends State<PagoPage> {
     final total = widget.entrada.precio * widget.cantidad;
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: ListView(children: [
-        PeipSectionCard(
-          titulo: 'Resumen de tu compra',
-          child: Column(children: [
-            _fila('Evento', widget.eventoTitulo),
-            _fila('Tipo de entrada', widget.entrada.nombre),
-            _fila('Cantidad', '${widget.cantidad}'),
-            _fila('Precio unitario', precioTexto(widget.entrada.precio)),
-            const Divider(height: 20),
-            _fila('Total', precioTexto(total), destacado: true),
-          ]),
-        ),
-        PeipSectionCard(
-          titulo: 'Método de pago',
-          child: Wrap(spacing: 8, runSpacing: 8, children: [
-            for (final m in const ['Tarjeta', 'PSE', 'Efectivo'])
-              PeipChip(
-                label: m,
-                selected: _metodo == m,
-                onTap: () => setState(() => _metodo = m),
-              ),
-          ]),
-        ),
-        const SizedBox(height: 8),
-        PeipButton(
-          label: _procesando ? 'Procesando…' : 'Confirmar compra',
-          onPressed: _procesando ? null : _confirmar,
-        ),
-      ]),
+      child: ListView(
+        children: [
+          PeipSectionCard(
+            titulo: 'Resumen de tu compra',
+            child: Column(
+              children: [
+                _fila('Evento', widget.eventoTitulo),
+                _fila('Tipo de entrada', widget.entrada.nombre),
+                _fila('Cantidad', '${widget.cantidad}'),
+                _fila('Precio unitario', precioTexto(widget.entrada.precio)),
+                const Divider(height: 20),
+                _fila('Total', precioTexto(total), destacado: true),
+              ],
+            ),
+          ),
+          PeipSectionCard(
+            titulo: 'Método de pago',
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final m in const ['Tarjeta', 'PSE', 'Efectivo'])
+                  PeipChip(
+                    label: m,
+                    selected: _metodo == m,
+                    onTap: () => setState(() => _metodo = m),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          PeipButton(
+            label: _procesando ? 'Procesando…' : 'Confirmar compra',
+            onPressed: _procesando ? null : _confirmar,
+          ),
+        ],
+      ),
     );
   }
 }

@@ -11,14 +11,10 @@ class _EntradaForm {
   final TextEditingController precio;
   final TextEditingController beneficios;
 
-  _EntradaForm({
-    this.idEntrada = 0,
-    String nombre = '',
-    int precio = 0,
-    String beneficios = '',
-  })  : nombre = TextEditingController(text: nombre),
-        precio = TextEditingController(text: precio.toString()),
-        beneficios = TextEditingController(text: beneficios);
+  _EntradaForm({this.idEntrada = 0, String nombre = '', int precio = 0, String beneficios = ''})
+    : nombre = TextEditingController(text: nombre),
+      precio = TextEditingController(text: precio.toString()),
+      beneficios = TextEditingController(text: beneficios);
 
   void dispose() {
     nombre.dispose();
@@ -27,8 +23,7 @@ class _EntradaForm {
   }
 }
 
-/// Crea un evento nuevo o edita uno existente ([evento] != null).
-/// Al crear, permite partir de una edición anterior (evento_anterior).
+// si evento viene null es creación, si no es edición
 class CrearEventoPage extends StatefulWidget {
   final Evento? evento;
   final List<TipoEntrada> entradasActuales;
@@ -108,12 +103,16 @@ class _CrearEventoPageState extends State<CrearEventoPage> {
     }
     _entradas
       ..clear()
-      ..addAll(entradas.map((t) => _EntradaForm(
+      ..addAll(
+        entradas.map(
+          (t) => _EntradaForm(
             idEntrada: desplazar ? 0 : t.idEntrada,
             nombre: t.nombre,
             precio: t.precio,
             beneficios: t.beneficios ?? '',
-          )));
+          ),
+        ),
+      );
     if (_entradas.isEmpty) _entradas.add(_EntradaForm(nombre: 'General'));
   }
 
@@ -137,14 +136,12 @@ class _CrearEventoPageState extends State<CrearEventoPage> {
     );
     if (d == null || !mounted) return null;
     if (_todoElDia) return DateTime(d.year, d.month, d.day);
-    final t = await showTimePicker(
-        context: context, initialTime: TimeOfDay.fromDateTime(actual));
+    final t = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(actual));
     if (t == null) return null;
     return DateTime(d.year, d.month, d.day, t.hour, t.minute);
   }
 
-  void _aviso(String m) =>
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(m)));
+  void _aviso(String m) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(m)));
 
   void _guardar(String estado) {
     if (_titulo.text.trim().isEmpty || _lugar.text.trim().isEmpty) {
@@ -163,21 +160,21 @@ class _CrearEventoPageState extends State<CrearEventoPage> {
         _aviso('Cada entrada necesita nombre y un precio válido.');
         return;
       }
-      entradas.add(TipoEntrada(
-        idEntrada: f.idEntrada,
-        nombre: nombre,
-        precio: precio,
-        beneficios:
-            f.beneficios.text.trim().isEmpty ? null : f.beneficios.text.trim(),
-        idEvento: widget.evento?.idEvento ?? 0,
-      ));
+      entradas.add(
+        TipoEntrada(
+          idEntrada: f.idEntrada,
+          nombre: nombre,
+          precio: precio,
+          beneficios: f.beneficios.text.trim().isEmpty ? null : f.beneficios.text.trim(),
+          idEvento: widget.evento?.idEvento ?? 0,
+        ),
+      );
     }
     final evento = Evento(
       idEvento: widget.evento?.idEvento ?? 0,
       titulo: _titulo.text.trim(),
       eslogan: _eslogan.text.trim().isEmpty ? null : _eslogan.text.trim(),
-      descripcion:
-          _descripcion.text.trim().isEmpty ? null : _descripcion.text.trim(),
+      descripcion: _descripcion.text.trim().isEmpty ? null : _descripcion.text.trim(),
       fechaInicio: _inicio,
       fechaFin: _todoElDia && !_fin.isAfter(_inicio) ? _inicio : _fin,
       todoElDia: _todoElDia,
@@ -205,8 +202,9 @@ class _CrearEventoPageState extends State<CrearEventoPage> {
         items: [
           for (final e in widget.edicionesAnteriores)
             DropdownMenuItem(
-                value: e.idEvento,
-                child: Text(e.titulo, overflow: TextOverflow.ellipsis, maxLines: 1))
+              value: e.idEvento,
+              child: Text(e.titulo, overflow: TextOverflow.ellipsis, maxLines: 1),
+            ),
         ],
         onChanged: (id) {
           final e = widget.edicionesAnteriores.firstWhere((x) => x.idEvento == id);
@@ -224,29 +222,36 @@ class _CrearEventoPageState extends State<CrearEventoPage> {
   Widget _filaEntrada(int i) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(
-          flex: 3,
-          child: PeipFormField(
-              label: 'Nombre', child: PeipTextField(controller: _entradas[i].nombre)),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          flex: 2,
-          child: PeipFormField(
-            label: 'Precio',
-            child: PeipTextField(
-                controller: _entradas[i].precio, keyboardType: TextInputType.number),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 3,
+            child: PeipFormField(
+              label: 'Nombre',
+              child: PeipTextField(controller: _entradas[i].nombre),
+            ),
           ),
-        ),
-        IconButton(
-          tooltip: 'Quitar entrada',
-          icon: const Icon(Icons.remove_circle_outline),
-          onPressed: _entradas.length > 1
-              ? () => setState(() => _entradas.removeAt(i).dispose())
-              : null,
-        ),
-      ]),
+          const SizedBox(width: 8),
+          Expanded(
+            flex: 2,
+            child: PeipFormField(
+              label: 'Precio',
+              child: PeipTextField(
+                controller: _entradas[i].precio,
+                keyboardType: TextInputType.number,
+              ),
+            ),
+          ),
+          IconButton(
+            tooltip: 'Quitar entrada',
+            icon: const Icon(Icons.remove_circle_outline),
+            onPressed: _entradas.length > 1
+                ? () => setState(() => _entradas.removeAt(i).dispose())
+                : null,
+          ),
+        ],
+      ),
     );
   }
 
@@ -255,142 +260,161 @@ class _CrearEventoPageState extends State<CrearEventoPage> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        if (!_editando && widget.edicionesAnteriores.isNotEmpty) ...[
-          _bloqueEdicionAnterior(),
-        ],
+        if (!_editando && widget.edicionesAnteriores.isNotEmpty) ...[_bloqueEdicionAnterior()],
         PeipSectionCard(
           titulo: 'Información básica',
-          child: Column(children: [
-            PeipFormField(label: 'Título', child: PeipTextField(controller: _titulo)),
-            const SizedBox(height: 12),
-            PeipFormField(
-                label: 'Eslogan', child: PeipTextField(controller: _eslogan)),
-            const SizedBox(height: 12),
-            PeipFormField(
-                label: 'Descripción',
-                child: PeipTextField(controller: _descripcion, maxLines: 4)),
-            const SizedBox(height: 12),
-            PeipFormField(
-              label: 'Categoría',
-              child: DropdownButtonFormField<int>(
-                initialValue: _idCategoria,
-                isExpanded: true,
-                items: [
-                  for (final c in widget.categorias)
-                    DropdownMenuItem(value: c.idCategoria, child: Text(c.nombre))
-                ],
-                onChanged: (v) => setState(() => _idCategoria = v!),
+          child: Column(
+            children: [
+              PeipFormField(
+                label: 'Título',
+                child: PeipTextField(controller: _titulo),
               ),
-            ),
-            const SizedBox(height: 12),
-            PeipFormField(
-              label: 'Aforo',
-              child: PeipTextField(
-                  controller: _aforo, keyboardType: TextInputType.number),
-            ),
-          ]),
+              const SizedBox(height: 12),
+              PeipFormField(
+                label: 'Eslogan',
+                child: PeipTextField(controller: _eslogan),
+              ),
+              const SizedBox(height: 12),
+              PeipFormField(
+                label: 'Descripción',
+                child: PeipTextField(controller: _descripcion, maxLines: 4),
+              ),
+              const SizedBox(height: 12),
+              PeipFormField(
+                label: 'Categoría',
+                child: DropdownButtonFormField<int>(
+                  initialValue: _idCategoria,
+                  isExpanded: true,
+                  items: [
+                    for (final c in widget.categorias)
+                      DropdownMenuItem(value: c.idCategoria, child: Text(c.nombre)),
+                  ],
+                  onChanged: (v) => setState(() => _idCategoria = v!),
+                ),
+              ),
+              const SizedBox(height: 12),
+              PeipFormField(
+                label: 'Aforo',
+                child: PeipTextField(controller: _aforo, keyboardType: TextInputType.number),
+              ),
+            ],
+          ),
         ),
         PeipSectionCard(
           titulo: 'Cuándo',
-          // Material transparente: si no, el fondo de la tarjeta tapa el
-          // ripple y el color de los ListTile de abajo.
+          // sin esto el ListTile no se ve bien tocado
           child: Material(
             type: MaterialType.transparency,
-            child: Column(children: [
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: const Text('Todo el día'),
-                value: _todoElDia,
-                onChanged: (v) => setState(() => _todoElDia = v),
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.event),
-                title: const Text('Inicio'),
-                subtitle: Text(_todoElDia
-                    ? fechaCorta(_inicio)
-                    : '${fechaCorta(_inicio)} ${hora(_inicio)}'),
-                onTap: () async {
-                  final d = await _elegirFecha(_inicio);
-                  if (d != null) setState(() => _inicio = d);
-                },
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.event_available),
-                title: const Text('Fin'),
-                subtitle: Text(_todoElDia
-                    ? fechaCorta(_fin)
-                    : '${fechaCorta(_fin)} ${hora(_fin)}'),
-                onTap: () async {
-                  final d = await _elegirFecha(_fin);
-                  if (d != null) setState(() => _fin = d);
-                },
-              ),
-            ]),
+            child: Column(
+              children: [
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Todo el día'),
+                  value: _todoElDia,
+                  onChanged: (v) => setState(() => _todoElDia = v),
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.event),
+                  title: const Text('Inicio'),
+                  subtitle: Text(
+                    _todoElDia ? fechaCorta(_inicio) : '${fechaCorta(_inicio)} ${hora(_inicio)}',
+                  ),
+                  onTap: () async {
+                    final d = await _elegirFecha(_inicio);
+                    if (d != null) setState(() => _inicio = d);
+                  },
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.event_available),
+                  title: const Text('Fin'),
+                  subtitle: Text(
+                    _todoElDia ? fechaCorta(_fin) : '${fechaCorta(_fin)} ${hora(_fin)}',
+                  ),
+                  onTap: () async {
+                    final d = await _elegirFecha(_fin);
+                    if (d != null) setState(() => _fin = d);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
         PeipSectionCard(
           titulo: 'Dónde',
-          child: Column(children: [
-            PeipFormField(
-              label: 'Ciudad',
-              child: DropdownButtonFormField<int>(
-                initialValue: _idCiudad,
-                isExpanded: true,
-                items: [
-                  for (final c in widget.ciudades)
-                    DropdownMenuItem(value: c.idCiudad, child: Text(c.nombre))
-                ],
-                onChanged: (v) => setState(() => _idCiudad = v!),
+          child: Column(
+            children: [
+              PeipFormField(
+                label: 'Ciudad',
+                child: DropdownButtonFormField<int>(
+                  initialValue: _idCiudad,
+                  isExpanded: true,
+                  items: [
+                    for (final c in widget.ciudades)
+                      DropdownMenuItem(value: c.idCiudad, child: Text(c.nombre)),
+                  ],
+                  onChanged: (v) => setState(() => _idCiudad = v!),
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            PeipFormField(label: 'Lugar', child: PeipTextField(controller: _lugar)),
-          ]),
+              const SizedBox(height: 12),
+              PeipFormField(
+                label: 'Lugar',
+                child: PeipTextField(controller: _lugar),
+              ),
+            ],
+          ),
         ),
         PeipSectionCard(
           titulo: 'Tipos de entrada',
-          child: Column(children: [
-            for (var i = 0; i < _entradas.length; i++) _filaEntrada(i),
-            PeipButton(
-              label: 'Agregar tipo de entrada',
-              kind: PeipButtonKind.secondary,
-              icon: Icons.add,
-              onPressed: () => setState(() => _entradas.add(_EntradaForm())),
-            ),
-          ]),
+          child: Column(
+            children: [
+              for (var i = 0; i < _entradas.length; i++) _filaEntrada(i),
+              PeipButton(
+                label: 'Agregar tipo de entrada',
+                kind: PeipButtonKind.secondary,
+                icon: Icons.add,
+                onPressed: () => setState(() => _entradas.add(_EntradaForm())),
+              ),
+            ],
+          ),
         ),
         PeipSectionCard(
           titulo: 'Etiquetas',
-          child: Wrap(spacing: 8, runSpacing: 8, children: [
-            for (final t in widget.etiquetas)
-              PeipChip(
-                label: t.nombre,
-                selected: _etiquetas.contains(t.idEtiqueta),
-                onTap: () => setState(() {
-                  if (!_etiquetas.add(t.idEtiqueta)) _etiquetas.remove(t.idEtiqueta);
-                }),
-              ),
-          ]),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final t in widget.etiquetas)
+                PeipChip(
+                  label: t.nombre,
+                  selected: _etiquetas.contains(t.idEtiqueta),
+                  onTap: () => setState(() {
+                    if (!_etiquetas.add(t.idEtiqueta)) _etiquetas.remove(t.idEtiqueta);
+                  }),
+                ),
+            ],
+          ),
         ),
         const SizedBox(height: 4),
-        Row(children: [
-          Expanded(
-            child: PeipButton(
-              label: 'Guardar borrador',
-              kind: PeipButtonKind.secondary,
-              onPressed: () => _guardar('borrador'),
+        Row(
+          children: [
+            Expanded(
+              child: PeipButton(
+                label: 'Guardar borrador',
+                kind: PeipButtonKind.secondary,
+                onPressed: () => _guardar('borrador'),
+              ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: PeipButton(
-              label: _editando ? 'Guardar cambios' : 'Publicar',
-              onPressed: () => _guardar('publicado'),
+            const SizedBox(width: 12),
+            Expanded(
+              child: PeipButton(
+                label: _editando ? 'Guardar cambios' : 'Publicar',
+                onPressed: () => _guardar('publicado'),
+              ),
             ),
-          ),
-        ]),
+          ],
+        ),
       ],
     );
   }

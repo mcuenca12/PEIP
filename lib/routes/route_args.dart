@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import '../model/models.dart';
 import '../model/vistas.dart';
 
-/// Lo que recibe /evento por settings.arguments: el evento y los
-/// callbacks hacia el estado que vive en MainScreen (ver
-/// docs/convenciones-curso.md, "Cómo se pasan datos y callbacks").
+// lo que recibe /evento: el evento y los callbacks hacia MainScreen
 class DetalleArgs {
   final Evento evento;
   final List<TipoEntrada> entradas;
@@ -30,9 +28,7 @@ class DetalleArgs {
   });
 }
 
-/// Lo que recibe /pago: el resumen de la compra antes de confirmarla.
-/// Es simulado (sin pasarela real); queda listo para conectar en la
-/// siguiente entrega. [onConfirmar] es quien de verdad crea la Reserva.
+// resumen de la compra, onConfirmar es quien realmente crea la reserva
 class PagoArgs {
   final String eventoTitulo;
   final TipoEntrada entrada;
@@ -47,7 +43,6 @@ class PagoArgs {
   });
 }
 
-/// Lo que recibe /ticket: la reserva ya resuelta y el callback de cancelar.
 class TicketArgs {
   final TicketVista ticket;
   final VoidCallback onCancelar;
@@ -55,9 +50,6 @@ class TicketArgs {
   const TicketArgs({required this.ticket, required this.onCancelar});
 }
 
-/// Lo que recibe /crear-evento. [evento] null es creación; con evento, es
-/// edición. [edicionesAnteriores] solo aplica a creación (ver
-/// docs/pantallas.md, "Partir de una edición anterior").
 class CrearEventoArgs {
   final Evento? evento;
   final List<TipoEntrada> entradasActuales;

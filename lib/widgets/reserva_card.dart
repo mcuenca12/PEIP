@@ -4,7 +4,6 @@ import '../theme/app_colors.dart';
 import '../theme/app_shadows.dart';
 import '../utils/formato.dart';
 
-/// Tarjeta de un ticket reservado (lista "Mis tickets").
 class ReservaCard extends StatelessWidget {
   final String titulo;
   final String entrada;
@@ -43,10 +42,7 @@ class ReservaCard extends StatelessWidget {
         ),
         child: ListTile(
           onTap: onTap,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 14,
-            vertical: 6,
-          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           leading: Icon(
             Icons.qr_code_2,
             size: 38,
@@ -54,10 +50,7 @@ class ReservaCard extends StatelessWidget {
           ),
           title: Text(
             titulo,
-            style: const TextStyle(
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.textPrimary),
           ),
           subtitle: Text(
             '$cantidad × $entrada · ${fechaCorta(fecha)}${usada ? ' · Usada' : ''}',
@@ -67,10 +60,7 @@ class ReservaCard extends StatelessWidget {
               ? null
               : IconButton(
                   tooltip: 'Cancelar reserva',
-                  icon: const Icon(
-                    Icons.delete_outline,
-                    color: AppColors.danger,
-                  ),
+                  icon: const Icon(Icons.delete_outline, color: AppColors.danger),
                   onPressed: onCancelar,
                 ),
         ),
