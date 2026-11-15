@@ -1,6 +1,6 @@
 # Jerarquía de Interfaz de Usuario (UI)
 
-Este documento define la estructura de capas visuales y la separación estricta de responsabilidades entre pantallas, páginas y widgets dentro del proyecto `seminario_2026_02`.
+Este documento define la estructura de capas visuales y la separación estricta de responsabilidades entre pantallas, páginas y widgets dentro del proyecto `peip`.
 
 ---
 
@@ -68,11 +68,11 @@ Los **Widgets** son piezas visuales atómicas, autónomas y altamente reutilizab
 - **Agnósticos de Navegación**: No deben acoplarse rígidamente a rutas específicas; reciben sus datos y delegan sus eventos a través de propiedades en su constructor (`props` y `callbacks`).
 - **Diseño Autónomo**: Gestionan su propio espaciado interno (`padding`), decoración (`decoration`, `borderRadius`, `boxShadow`) y tipografía alineada al tema institucional (`Theme.of(context)`).
 - **Ejemplos en el proyecto**:
-  - `DescriptionCard`: Tarjeta con título, descripción, icono y etiqueta opcional.
-  - `UserProfileCard`: Tarjeta de perfil con estado de conexión.
-  - `NotificationBanner`: Banner de avisos institucionales.
-  - `StatusBadge`: Etiqueta con punto cromático de estado.
-  - `ActionButton`: Botón de acción con soporte de icono y texto.
+  - `EventCard`: Tarjeta de evento con imagen, categoría, fecha y precio.
+  - `ResultRow`: Fila horizontal de un resultado de búsqueda.
+  - `SemanticNote`: Aviso de coincidencia por significado.
+  - `PeipBadge`: Etiqueta de afinidad, categoría o entrada gratuita.
+  - `PeipButton`: Botón con variantes principal, secundaria y fantasma.
 
 ---
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script de auditoria de arquitectura para Flutter (seminario_2026_02)
+Script de auditoria de arquitectura para Flutter (peip)
 Inspecciona:
 1. Ultimos 5 commits en Git.
 2. Violaciones de Scaffold en lib/pages/ y lib/widgets/.

@@ -5,7 +5,7 @@ description: "Descompone un plan Flutter en tareas atomicas y verificables en .a
 
 # Skill: /c-task (Tareas Atomicas Verificables)
 
-Convierte `.agents/plans/<nombre>-plan.md` en tareas ejecutables para la app Flutter `seminario_2026_02`.
+Convierte `.agents/plans/<nombre>-plan.md` en tareas ejecutables para la app Flutter `peip`.
 
 ## Principios
 1. **Atomicidad**: cada tarea entrega algo concreto y compilable (ej. modelo, un widget + su test, una page, una screen + ruta).

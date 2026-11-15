@@ -1,6 +1,6 @@
 # Políticas de Control de Versiones y Git
 
-Este documento especifica los estándares de nomenclatura de ramas, formato de mensajes de confirmación (*commits*) y buenas prácticas para el trabajo colaborativo en Git dentro del proyecto `seminario_2026_02`.
+Este documento especifica los estándares de nomenclatura de ramas, formato de mensajes de confirmación (*commits*) y buenas prácticas para el trabajo colaborativo en Git dentro del proyecto `peip`.
 
 ---
 
@@ -40,10 +40,10 @@ Los mensajes de commit deben seguir la especificación de *Conventional Commits*
 
 | Tipo | Propósito | Ejemplo |
 | :--- | :--- | :--- |
-| **`feat`** | Incorporación de una nueva funcionalidad, pantalla o widget | `feat(widgets): create DescriptionCard reusable component` |
+| **`feat`** | Incorporación de una nueva funcionalidad, pantalla o widget | `feat(widgets): agrega widget reutilizable EventCard` |
 | **`fix`** | Corrección de un fallo o error en código existente | `fix(test): update smoke test to assert LayoutDemoScreen` |
 | **`refactor`** | Reestructuración de código que no altera el comportamiento externo | `refactor(pages): extract reusable card styles` |
-| **`test`** | Creación o actualización de pruebas unitarias o de widgets | `test(widgets): add unit tests for DescriptionCard` |
+| **`test`** | Creación o actualización de pruebas unitarias o de widgets | `test(widgets): agrega pruebas de EventCard` |
 | **`docs`** | Modificaciones exclusivas en documentación o archivos de memoria | `docs(conventions): define flutter and git rules` |
 | **`chore`** | Actualización de dependencias, scripts o configuración del proyecto | `chore(deps): upgrade supabase_flutter package` |
 | **`style`** | Ajustes cosméticos de espaciado o formato sin impacto lógico | `style(lib): format files with dart format` |

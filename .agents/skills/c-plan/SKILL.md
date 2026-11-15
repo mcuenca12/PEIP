@@ -5,7 +5,7 @@ description: "Disena el plan tecnico Flutter para una spec existente en .agents/
 
 # Skill: /c-plan (Plan Tecnico de Implementacion)
 
-Toma una spec (`.agents/specs/<nombre>-spec.md`) y define el **COMO** en la app Flutter `seminario_2026_02`.
+Toma una spec (`.agents/specs/<nombre>-spec.md`) y define el **COMO** en la app Flutter `peip`.
 
 ## Principios
 1. **Sin codigo de produccion**: solo firmas, responsabilidades y flujos; nada de cuerpos de metodos finales.
@@ -22,7 +22,7 @@ Toma una spec (`.agents/specs/<nombre>-spec.md`) y define el **COMO** en la app 
 ## Flujo
 1. **Insumos**: spec en estado `APPROVED` (o confirmada por el usuario), convenciones y estado del proyecto; inspeccionar `lib/` real.
 2. **Mapa de componentes**: listar por capa lo que se crea o modifica (modelos, widgets, pages, screens, rutas, main), con ruta de archivo, responsabilidad y firma publica (parametros, callbacks).
-3. **Estado y datos**: decidir donde vive el estado (StatefulWidget, elevacion de estado a la Screen, `IndexedStack`) y de donde vienen los datos (mock en `lib/model/mock_data.dart` o futura fuente). Justificar.
+3. **Estado y datos**: decidir donde vive el estado (StatefulWidget, elevacion de estado a la Screen, `IndexedStack`) y de donde vienen los datos (servicios en `lib/services/` contra Supabase). Justificar.
 4. **Navegacion**: rutas nuevas, argumentos, `Navigator.push/pop`, integracion con la `NavigationBar` de `main_screen.dart`.
 5. **Diagramas Mermaid**: arbol de widgets (`flowchart`) y flujo de navegacion o de estado (`sequenceDiagram` / `stateDiagram`).
 6. **Estrategia de pruebas**: widget tests en `test/` por cada widget/page relevante, mapeados a los escenarios Gherkin.

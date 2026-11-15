@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script de auditoría de Clean Code y Linter para Flutter (seminario_2026_02)
+Script de auditoría de Clean Code y Linter para Flutter (peip)
 Inspecciona:
 1. Llamadas a print() en producción (avoid_print).
 2. Campos mutables en StatelessWidget.

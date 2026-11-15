@@ -1,6 +1,6 @@
 # Estándares de Código Dart y Flutter
 
-Este documento establece las directrices obligatorias de programación y estilo para el proyecto `seminario_2026_02`. Todo agente de desarrollo debe validar que el código propuesto cumpla con estas reglas antes de integrarlo al repositorio.
+Este documento establece las directrices obligatorias de programación y estilo para el proyecto `peip`. Todo agente de desarrollo debe validar que el código propuesto cumpla con estas reglas antes de integrarlo al repositorio.
 
 ---
 
@@ -14,9 +14,9 @@ En Flutter, el uso de `const` permite al compilador y al motor de renderizado in
    - Todo widget que no gestione estado mutable interno (`StatelessWidget`) y cuyas propiedades sean finales (`final`) debe declarar un constructor `const`.
    ```dart
    // Correcto
-   class StatusBadge extends StatelessWidget {
-     final String state;
-     const StatusBadge({super.key, required this.state});
+   class PeipBadge extends StatelessWidget {
+     final String texto;
+     const PeipBadge({super.key, required this.texto});
      ...
    }
    ```
@@ -38,10 +38,10 @@ Siguiendo las directrices oficiales de *Effective Dart*:
 
 | Elemento | Convención | Ejemplo |
 | :--- | :--- | :--- |
-| **Archivos y Directorios** | `snake_case` | `description_card.dart`, `layout_demo_screen.dart` |
-| **Clases, Widgets y Enums** | `PascalCase` | `DescriptionCard`, `ExerciseCategory` |
+| **Archivos y Directorios** | `snake_case` | `event_card.dart`, `detalle_evento_screen.dart` |
+| **Clases, Widgets y Enums** | `PascalCase` | `EventCard`, `PeipButtonVariant` |
 | **Extensiones y Mixins** | `PascalCase` | `StringExtensions`, `ResponsiveMixin` |
-| **Variables y Parámetros** | `camelCase` | `actionText`, `exerciseList`, `onTap` |
+| **Variables y Parámetros** | `camelCase` | `idEvento`, `tiposEntrada`, `onToggleGuardado` |
 | **Funciones y Métodos** | `camelCase` | `calculateProgress()`, `buildHeader()` |
 | **Constantes en Código** | `lowerCamelCase` | `defaultPadding`, `kAnimationDuration` |
 

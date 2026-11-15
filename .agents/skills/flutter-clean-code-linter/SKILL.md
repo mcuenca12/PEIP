@@ -5,7 +5,7 @@ description: "Audita y corrige Clean Code y analisis estatico en Flutter/Dart: r
 
 # Flutter Clean Code Linter Skill
 
-Esta skill guia la auditoria, depuracion y correccion de estandares de calidad de codigo, buenas practicas de desarrollo en Dart y cumplimiento del paquete `flutter_lints` para el proyecto `seminario_2026_02`.
+Esta skill guia la auditoria, depuracion y correccion de estandares de calidad de codigo, buenas practicas de desarrollo en Dart y cumplimiento del paquete `flutter_lints` para el proyecto `peip`.
 
 ---
 
@@ -23,7 +23,7 @@ Esta skill guia la auditoria, depuracion y correccion de estandares de calidad d
    - Reemplazar por callbacks desacoplados (`VoidCallback? onPressed`) o por `debugPrint(...)` en diagnosticos locales.
 5. **Nomenclatura Effective Dart**:
    - Archivos: `snake_case` (ej. `user_profile_card.dart`).
-   - Clases y Enums: `PascalCase` (ej. `UserProfileCard`).
+   - Clases y Enums: `PascalCase` (ej. `EventCard`).
    - Variables, metodos y parametros: `camelCase` (ej. `onTapAction`).
 
 ---

@@ -5,7 +5,7 @@ description: "Audita la arquitectura y organizacion del proyecto Flutter: inspec
 
 # Project Architecture Auditor Skill
 
-Esta skill guia la auditoria tecnica y arquitectonica del repositorio Flutter `seminario_2026_02`. Esta disenada para verificar de manera determinista si los cambios recientes respetan la organizacion por capas del proyecto, la reutilizacion de componentes atomicos y las buenas practicas de composicion de widgets.
+Esta skill guia la auditoria tecnica y arquitectonica del repositorio Flutter `peip`. Esta disenada para verificar de manera determinista si los cambios recientes respetan la organizacion por capas del proyecto, la reutilizacion de componentes atomicos y las buenas practicas de composicion de widgets.
 
 ---
 
@@ -16,7 +16,7 @@ Esta skill guia la auditoria tecnica y arquitectonica del repositorio Flutter `s
    - `lib/screens/` -> Hospeda exclusivamente el `Scaffold` raiz, `AppBar`, tabs y navegacion.
    - `lib/pages/` -> Contenido interno (`body`). PROHIBIDO incluir `Scaffold` propio.
    - `lib/widgets/` -> Componentes atomicos reutilizables y agnosticos de navegacion.
-3. **Reutilizacion de Componentes**: Evitar la duplicacion de codigo visual promoviendo el uso de widgets existentes en `lib/widgets/` (`ActionButton`, `StatusBadge`, `UserProfileCard`, `NotificationBanner`, `DescriptionCard`).
+3. **Reutilizacion de Componentes**: Evitar la duplicacion de codigo visual promoviendo el uso de widgets existentes en `lib/widgets/` (`PeipButton`, `PeipBadge`, `PeipChip`, `EventCard`, `ResultRow`, `SemanticNote`, `EmptyState`).
 4. **Principio de Composicion**: Favorecer la composicion (composition over inheritance / monoliths). Desaconsejar funciones privadas `Widget _buildSection()` en favor de `StatelessWidget` pequenos y reutilizables.
 
 ---
@@ -52,10 +52,10 @@ Inspecciona cada archivo modificado segun su carpeta de destino:
 
 Revisa si el nuevo codigo reinventa elementos que ya existen en `lib/widgets/`:
 
-* Se creo un boton estilizado cuando ya existe `ActionButton`?
-* Se creo una pildora o etiqueta de estado cuando ya existe `StatusBadge`?
-* Se creo un aviso o alerta cuando ya existe `NotificationBanner`?
-* Se diseno una ficha de usuario cuando ya existe `UserProfileCard`?
+* Se creo un boton estilizado cuando ya existe `PeipButton`?
+* Se creo una pildora o etiqueta cuando ya existen `PeipBadge` y `PeipChip`?
+* Se creo un aviso o estado vacio cuando ya existen `SemanticNote` y `EmptyState`?
+* Se diseno una tarjeta de evento cuando ya existen `EventCard` y `ResultRow`?
 
 **Accion recomendada**: Reemplazar duplicados importando el widget comun y pasando las propiedades requeridas via constructor.
 

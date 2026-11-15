@@ -22,7 +22,7 @@
 - Dependencias previas: Ninguna
 - Archivos involucrados:
   - `lib/model/nombre.dart` (crear)
-  - `lib/model/mock_data.dart` (modificar)
+  - `lib/services/nombre_service.dart` (crear)
 - Acciones:
   - [ ] 1. Crear la clase de modelo con campos `final` y constructor `const`.
   - [ ] 2. Agregar datos mock necesarios.

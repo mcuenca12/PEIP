@@ -11,7 +11,7 @@
 Problema o necesidad que resuelve la funcionalidad, en lenguaje de negocio.
 
 ## Roles Involucrados
-- [Usuario | Entrenador | Administrador]: que puede hacer en esta funcionalidad.
+- [Asistente | Organizador]: que puede hacer en esta funcionalidad.
 
 ## Historias de Usuario
 

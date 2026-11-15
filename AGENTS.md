@@ -1,4 +1,4 @@
-# Portal de Agentes - Seminario de Ingenieria de Software (`seminario_2026_02`)
+# Portal de Agentes - Seminario de Ingenieria de Software (`peip`)
 
 Este archivo es el **punto de entrada principal (entrypoint)** para los agentes de Inteligencia Artificial (como Antigravity, Cursor, Copilot u otros asistentes autonomos de codificacion) que operan en este repositorio. Proporciona una estructura clara y referencias relativas hacia los componentes clave del sistema de agentes: memoria persistente, convenciones de desarrollo y habilidades operativas.
 
