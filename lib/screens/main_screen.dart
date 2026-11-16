@@ -47,10 +47,11 @@ class _MainScreenState extends State<MainScreen> {
 
   Ciudad _ciudadDe(int id) => MockData.ciudades.firstWhere((c) => c.idCiudad == id);
 
-  int _precioMinimoDe(int idEvento) => _tiposEntrada
-      .where((t) => t.idEvento == idEvento)
-      .map((t) => t.precio)
-      .reduce((a, b) => a < b ? a : b);
+  // reduce falla con lista vacia, y un evento puede llegar sin entradas
+  int _precioMinimoDe(int idEvento) {
+    final precios = _entradasDe(idEvento).map((t) => t.precio);
+    return precios.isEmpty ? 0 : precios.reduce((a, b) => a < b ? a : b);
+  }
 
   List<Evento> get _vigentes => _eventos.where((e) => e.estado != 'cancelado').toList();
 
