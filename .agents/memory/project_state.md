@@ -101,5 +101,3 @@ bloque antes de escribir código.
   superan el tamaño habitual del resto del proyecto.
 - Al editar un evento no se ofrecen ediciones anteriores: el argumento llega
   siempre vacío.
-- `CLAUDE.md` en la raíz todavía describe la entrega 3 y prohíbe el uso de la
-  nube. Debe actualizarse al arrancar esta entrega.
