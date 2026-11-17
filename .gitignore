@@ -52,3 +52,7 @@ app.*.map.json
 # en el repo que ve el profesor.
 /CLAUDE.md
 /docs/
+
+# Credenciales de Supabase para --dart-define-from-file. Solo se entrega
+# env.example.json con las llaves vacías.
+/env.json

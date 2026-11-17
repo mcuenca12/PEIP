@@ -18,8 +18,10 @@
 - **Dependencias**: `cupertino_icons`, `qr_flutter` (generación del código QR
   del ticket)
 - **Análisis**: `flutter_lints` activo
-- **Pendiente de agregar**: `supabase_flutter`, y la configuración de variables
-  de entorno con `String.fromEnvironment` y `--dart-define-from-file`
+- **Pendiente de agregar**: `supabase_flutter` y el `Supabase.initialize` del
+  arranque. Las variables de entorno ya están documentadas en el README:
+  `String.fromEnvironment` con `--dart-define-from-file=env.json`, y `env.json`
+  está ignorado por git.
 
 ---
 
@@ -51,9 +53,11 @@ constructor y reportan con callbacks.
 - `lib/screens/` (9 archivos): únicos con `Scaffold`, `AppBar` y navegación.
 - `lib/pages/` (12 archivos): contenido del `body`, sin `Scaffold`. Ocho son
   `StatefulWidget` por estado efímero de formulario.
-- `lib/widgets/` (18 archivos): componentes reutilizables correspondientes a
-  la galería de la entrega 2.
-- `lib/model/`: una clase por tabla del MER, más `mock_data.dart`.
+- `lib/widgets/` (22 archivos más el barrel): componentes reutilizables,
+  correspondientes a la galería de la entrega 2 más los que hicieron falta en
+  el código.
+- `lib/model/`: una clase por tabla del MER, con `fromMap`/`toMap` contra las
+  columnas reales, más `mock_data.dart`.
 - `lib/theme/`: colores, tipografía, iconos y sombras del diseño.
 - `lib/utils/`: formateo de fecha y precio, cálculo de afinidad y búsqueda por
   significado.
@@ -69,9 +73,13 @@ búsqueda por significado se resuelven en el dispositivo, en
 
 La búsqueda compara palabras clave de la consulta contra título, eslogan,
 descripción, categoría y etiquetas, con un diccionario de sinónimos
-español-inglés. Exige al menos dos coincidencias, lo que hace que una consulta
-de una sola palabra no devuelva resultados. Esa limitación desaparece al
-mover la búsqueda a la base de datos.
+español-inglés. Pide dos coincidencias cuando la consulta trae varias palabras
+y una cuando trae una sola, para no devolver medio catálogo por una palabra
+suelta de una frase larga.
+
+Los modelos ya saben leerse y escribirse contra las columnas de la base, de
+modo que los servicios solo tienen que hacer las consultas. El identificador
+de usuario es el uuid de `auth.users`, no un entero.
 
 ---
 
@@ -93,11 +101,36 @@ que cambia es de dónde salen los datos.
 Cada integrante escribe la especificación, el plan y las tareas de su propio
 bloque antes de escribir código.
 
+### Avance
+
+- Santiago tiene el esquema y las políticas en la rama `dev-santiago`, con la
+  vista `v_evento` y las funciones de búsqueda y afinidad. Falta mergear a
+  `main` y falta el archivo de datos semilla.
+- Alejandro tiene mergeada la especificación de autenticación; falta el
+  cliente y la sesión.
+- Mateo tiene los modelos serializados, los estados de carga y error, y las
+  pruebas. Los servicios quedan bloqueados hasta que exista el cliente.
+- Jacobo entra por `crear_evento_page.dart`, donde `imagenPath` ya se conserva
+  al guardar.
+
+### Decisiones resueltas
+
+- El identificador de usuario es `uuid` y no entero, porque `usuario` referencia
+  `auth.users (id)`. Era la decisión abierta del plan de persistencia.
+- Los catálogos (ciudad, categoría, etiqueta, organizador, serie) se leen y no
+  se escriben desde el cliente, así que sus modelos no llevan `toMap`.
+
 ---
 
 ## 6. Deuda Conocida
 
-- `main_screen.dart` (408 líneas) y `crear_evento_page.dart` (421 líneas)
-  superan el tamaño habitual del resto del proyecto.
-- Al editar un evento no se ofrecen ediciones anteriores: el argumento llega
-  siempre vacío.
+- `main_screen.dart` es el archivo más largo del proyecto (412 líneas). Es por
+  diseño: concentra el estado de la aplicación y no tiene métodos `_build`.
+- Quedan seis métodos `Widget _...` privados en `preferencias_page`,
+  `pago_page`, `ticket_page`, `explorar_page` (dos) y `peip_badge`. Los dos de
+  `explorar_page` son listas de eventos y probablemente sean un solo widget.
+- `v_evento` ya expone `precio_minimo` y `afinidad` calculados, pero el modelo
+  `Evento` todavía no los lee: los resuelve el cliente en `main_screen` y
+  `lib/utils/busqueda.dart`. Salen de ahí cuando entren los servicios.
+- `Usuario` conserva `email` y `contrasenaHash`, que no existen en el esquema
+  porque viven en `auth.users`. Los quita el bloque de autenticación.
