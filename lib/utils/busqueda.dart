@@ -10,7 +10,9 @@ double _puntajeCrudo(Usuario usuario, Evento evento) {
   return puntaje;
 }
 
-// normalizado a 63-84%, un 98% se ve falso
+// El puntaje crudo se presenta en la franja 63-84%. El piso existe porque
+// estos eventos ya pasaron el filtro de recomendados: mostrar un 4% en una
+// tarjeta que la app está recomendando se contradice.
 int calcularAfinidad(Usuario usuario, Evento evento) {
   final normalizado = (_puntajeCrudo(usuario, evento) / 4.0).clamp(0.0, 1.0);
   return (63 + normalizado * (84 - 63)).round();
@@ -114,9 +116,10 @@ String _textoBuscable(Evento e, Categoria c, List<Etiqueta> etiquetas) {
   ].join(' ').toLowerCase();
 }
 
-// compara palabras clave (con sinónimos es/en) contra el texto del evento.
-// pide al menos 2 coincidencias para que no traiga cosas por una sola
-// palabra suelta.
+// Compara palabras clave (con sinónimos es/en) contra el texto del evento.
+// Si la consulta trae varias palabras pide dos coincidencias, para no traer
+// medio catálogo por una palabra suelta de una frase larga; si trae una sola,
+// se conforma con esa.
 List<Evento> buscarPorSignificado(
   String consulta,
   List<Evento> eventos,
@@ -125,21 +128,13 @@ List<Evento> buscarPorSignificado(
 ) {
   final claves = _palabrasClave(consulta);
   if (claves.isEmpty) return eventos;
-  final puntuados =
-      eventos
-          .map(
-            (e) => (
-              evento: e,
-              puntaje: claves
-                  .where(
-                    (clave) =>
-                        _textoBuscable(e, categoriaDe(e.idCategoria), etiquetas).contains(clave),
-                  )
-                  .length,
-            ),
-          )
-          .where((p) => p.puntaje >= 2)
-          .toList()
-        ..sort((a, b) => b.puntaje.compareTo(a.puntaje));
+  final minimo = claves.length > 1 ? 2 : 1;
+  final puntuados = <({Evento evento, int puntaje})>[];
+  for (final e in eventos) {
+    final texto = _textoBuscable(e, categoriaDe(e.idCategoria), etiquetas);
+    final puntaje = claves.where(texto.contains).length;
+    if (puntaje >= minimo) puntuados.add((evento: e, puntaje: puntaje));
+  }
+  puntuados.sort((a, b) => b.puntaje.compareTo(a.puntaje));
   return [for (final p in puntuados) p.evento];
 }
