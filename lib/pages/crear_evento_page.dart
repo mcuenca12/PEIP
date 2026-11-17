@@ -181,6 +181,8 @@ class _CrearEventoPageState extends State<CrearEventoPage> {
       lugar: _lugar.text.trim(),
       estado: estado,
       aforo: int.tryParse(_aforo.text.trim()),
+      // la pantalla de imagen todavía no existe: se conserva la que ya tenía
+      imagenPath: widget.evento?.imagenPath,
       idCategoria: _idCategoria,
       idOrganizador: widget.evento?.idOrganizador ?? kOrganizadorPropio,
       idCiudad: _idCiudad,

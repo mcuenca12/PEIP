@@ -212,6 +212,7 @@ class _MainScreenState extends State<MainScreen> {
       lugar: e.lugar,
       estado: e.estado,
       aforo: e.aforo,
+      imagenPath: e.imagenPath,
       idCategoria: e.idCategoria,
       idOrganizador: e.idOrganizador,
       idCiudad: e.idCiudad,
