@@ -181,13 +181,16 @@ class _MainScreenState extends State<MainScreen> {
   List<TipoEntrada> _entradasDe(int idEvento) =>
       _tiposEntrada.where((t) => t.idEvento == idEvento).toList();
 
+  List<Evento> get _misEventos =>
+      _eventos.where((e) => e.idOrganizador == kOrganizadorPropio).toList();
+
   void _editarEvento(Evento evento) => Navigator.pushNamed(
     context,
     AppRoutes.crearEvento,
     arguments: CrearEventoArgs(
       evento: evento,
       entradasActuales: _entradasDe(evento.idEvento),
-      edicionesAnteriores: const [],
+      edicionesAnteriores: _misEventos,
       entradasDe: _entradasDe,
       onGuardar: _guardarEvento,
     ),
@@ -311,7 +314,7 @@ class _MainScreenState extends State<MainScreen> {
     arguments: CrearEventoArgs(
       evento: null,
       entradasActuales: const [],
-      edicionesAnteriores: _eventos.where((e) => e.idOrganizador == kOrganizadorPropio).toList(),
+      edicionesAnteriores: _misEventos,
       entradasDe: _entradasDe,
       onGuardar: _guardarEvento,
     ),
