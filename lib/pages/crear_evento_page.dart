@@ -191,76 +191,22 @@ class _CrearEventoPageState extends State<CrearEventoPage> {
     widget.onGuardar(evento, entradas);
   }
 
-  Widget _bloqueEdicionAnterior() {
-    return PeipSectionCard(
-      titulo: 'Partir de una edición anterior',
-      subtitulo: 'Copia datos, etiquetas y entradas; la fecha pasa al mes siguiente.',
-      child: DropdownButtonFormField<int>(
-        initialValue: _anteriorElegido,
-        isExpanded: true,
-        hint: const Text('Elegir edición…'),
-        items: [
-          for (final e in widget.edicionesAnteriores)
-            DropdownMenuItem(
-              value: e.idEvento,
-              child: Text(e.titulo, overflow: TextOverflow.ellipsis, maxLines: 1),
-            ),
-        ],
-        onChanged: (id) {
-          final e = widget.edicionesAnteriores.firstWhere((x) => x.idEvento == id);
-          setState(() {
-            _anteriorElegido = id;
-            _cargar(e, widget.entradasDe(e.idEvento), desplazar: true);
-            _idEventoAnterior = e.idEvento;
-            _idSerie = e.idSerie;
-          });
-        },
-      ),
-    );
-  }
-
-  Widget _filaEntrada(int i) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 3,
-            child: PeipFormField(
-              label: 'Nombre',
-              child: PeipTextField(controller: _entradas[i].nombre),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            flex: 2,
-            child: PeipFormField(
-              label: 'Precio',
-              child: PeipTextField(
-                controller: _entradas[i].precio,
-                keyboardType: TextInputType.number,
-              ),
-            ),
-          ),
-          IconButton(
-            tooltip: 'Quitar entrada',
-            icon: const Icon(Icons.remove_circle_outline),
-            onPressed: _entradas.length > 1
-                ? () => setState(() => _entradas.removeAt(i).dispose())
-                : null,
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        if (!_editando && widget.edicionesAnteriores.isNotEmpty) ...[_bloqueEdicionAnterior()],
+        if (!_editando && widget.edicionesAnteriores.isNotEmpty)
+          SelectorEdicionAnterior(
+            ediciones: widget.edicionesAnteriores,
+            idSeleccionado: _anteriorElegido,
+            onSeleccionar: (e) => setState(() {
+              _anteriorElegido = e.idEvento;
+              _cargar(e, widget.entradasDe(e.idEvento), desplazar: true);
+              _idEventoAnterior = e.idEvento;
+              _idSerie = e.idSerie;
+            }),
+          ),
         PeipSectionCard(
           titulo: 'Información básica',
           child: Column(
@@ -369,7 +315,14 @@ class _CrearEventoPageState extends State<CrearEventoPage> {
           titulo: 'Tipos de entrada',
           child: Column(
             children: [
-              for (var i = 0; i < _entradas.length; i++) _filaEntrada(i),
+              for (var i = 0; i < _entradas.length; i++)
+                FilaTipoEntrada(
+                  nombre: _entradas[i].nombre,
+                  precio: _entradas[i].precio,
+                  onQuitar: _entradas.length > 1
+                      ? () => setState(() => _entradas.removeAt(i).dispose())
+                      : null,
+                ),
               PeipButton(
                 label: 'Agregar tipo de entrada',
                 kind: PeipButtonKind.secondary,
