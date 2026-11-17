@@ -96,7 +96,7 @@ class Reserva {
   final String codigoQr;
   final DateTime fechaReserva;
   final DateTime? fechaUso;
-  final int idUsuario;
+  final String idUsuario;
   final int idEntrada;
   const Reserva({
     required this.idReserva,
@@ -110,7 +110,7 @@ class Reserva {
 }
 
 class Usuario {
-  final int idUsuario;
+  final String idUsuario;
   final String nombre;
   final String email;
   final String contrasenaHash;
@@ -153,13 +153,13 @@ class BusquedaReciente {
   final int idBusqueda;
   final String texto;
   final DateTime fecha;
-  final int idUsuario;
+  final String idUsuario;
   const BusquedaReciente(
       this.idBusqueda, this.texto, this.fecha, this.idUsuario);
 }
 
 class EventoGuardado {
-  final int idUsuario;
+  final String idUsuario;
   final int idEvento;
   final DateTime fechaGuardado;
   const EventoGuardado(this.idUsuario, this.idEvento, this.fechaGuardado);

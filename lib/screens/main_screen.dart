@@ -261,7 +261,7 @@ class _MainScreenState extends State<MainScreen> {
     final reserva = Reserva(
       idReserva: siguiente,
       cantidad: cantidad,
-      codigoQr: 'PEIP-E${entrada.idEvento}-R$siguiente-U${_usuario.idUsuario}',
+      codigoQr: 'PEIP-E${entrada.idEvento}-R$siguiente',
       fechaReserva: DateTime.now(),
       idUsuario: _usuario.idUsuario,
       idEntrada: idEntrada,

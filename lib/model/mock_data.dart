@@ -3,6 +3,10 @@ import 'models.dart';
 // el organizador del usuario de prueba, sus eventos se pueden editar
 const int kOrganizadorPropio = 3;
 
+// El id de usuario es el uuid que asigna Supabase Auth. Aquí se arma a mano,
+// con el mismo formato que va a tener en la tabla.
+String uuidSimulado(int n) => '00000000-0000-4000-8000-${n.toString().padLeft(12, '0')}';
+
 final DateTime kHoy = DateTime(2026, 11, 5);
 
 // hash falso, nada de bcrypt aquí
@@ -60,7 +64,7 @@ class MockData {
 
   static final usuarios = <Usuario>[
     Usuario(
-      idUsuario: 1,
+      idUsuario: uuidSimulado(1),
       nombre: 'Ana Torres',
       email: 'ana.torres@icesi.edu.co',
       contrasenaHash: hashSimulado('123456'),
@@ -362,7 +366,7 @@ class MockData {
       codigoQr: 'PEIP-DATA-SEP-0001',
       fechaReserva: DateTime(2026, 9, 1, 10),
       fechaUso: DateTime(2026, 9, 14, 8, 10),
-      idUsuario: 1,
+      idUsuario: uuidSimulado(1),
       idEntrada: 9,
     ),
     Reserva(
@@ -370,19 +374,19 @@ class MockData {
       cantidad: 2,
       codigoQr: 'PEIP-AGILE-DIC-0002',
       fechaReserva: DateTime(2026, 11, 5, 10),
-      idUsuario: 1,
+      idUsuario: uuidSimulado(1),
       idEntrada: 14,
     ),
   ];
 
   static final guardados = <EventoGuardado>[
-    EventoGuardado(1, 11, DateTime(2026, 11, 2, 9)),
-    EventoGuardado(1, 12, DateTime(2026, 11, 3, 14)),
-    EventoGuardado(1, 7, DateTime(2026, 11, 4, 20)),
+    EventoGuardado(uuidSimulado(1), 11, DateTime(2026, 11, 2, 9)),
+    EventoGuardado(uuidSimulado(1), 12, DateTime(2026, 11, 3, 14)),
+    EventoGuardado(uuidSimulado(1), 7, DateTime(2026, 11, 4, 20)),
   ];
 
   static final busquedas = <BusquedaReciente>[
-    BusquedaReciente(1, 'agile', DateTime(2026, 11, 3, 11), 1),
-    BusquedaReciente(2, 'estadística', DateTime(2026, 11, 4, 19), 1),
+    BusquedaReciente(1, 'agile', DateTime(2026, 11, 3, 11), uuidSimulado(1)),
+    BusquedaReciente(2, 'estadística', DateTime(2026, 11, 4, 19), uuidSimulado(1)),
   ];
 }

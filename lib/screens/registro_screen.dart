@@ -20,11 +20,8 @@ class RegistroScreen extends StatelessWidget {
     if (MockData.usuarios.any((u) => u.email.toLowerCase() == correo)) {
       return 'Ese correo ya está registrado.';
     }
-    final siguienteId =
-        MockData.usuarios.fold(0, (m, u) => u.idUsuario > m ? u.idUsuario : m) +
-            1;
     final nuevo = Usuario(
-      idUsuario: siguienteId,
+      idUsuario: uuidSimulado(MockData.usuarios.length + 1),
       nombre: nombre.trim(),
       email: email.trim(),
       contrasenaHash: hashSimulado(pass),
