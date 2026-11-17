@@ -4,7 +4,7 @@
 - ID: SPEC-001
 - Fecha: 2026-11-16
 - Autor: Santiago Laverde (Bloque A, entrega 4)
-- Estado: DRAFT
+- Estado: COMPLETED
 - Épica relacionada: Épica 2 - Persistencia de la información (HU-04, HU-05); Épica 3 - Descubrimiento, búsqueda y recomendación (HU-08, HU-09, HU-11); Épica 7 - Perfil de gustos y privacidad (HU-20, solo el efecto sobre el listado). Ver .agents/memory/epics.md
 
 ## Contexto y Objetivo
