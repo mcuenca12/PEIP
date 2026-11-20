@@ -2,6 +2,7 @@ export 'empty_state.dart';
 export 'error_state.dart';
 export 'event_card.dart';
 export 'fila_tipo_entrada.dart';
+export 'imagen_evento.dart';
 export 'inferred_tag_row.dart';
 export 'info_row.dart';
 export 'interest_tile.dart';
