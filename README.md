@@ -12,11 +12,12 @@ la autenticación, la búsqueda de texto completo y las imágenes.
 
 ```
 flutter pub get
-flutter run
+flutter run --dart-define-from-file=env.json
 ```
 
-Mientras la capa de servicios no esté conectada, la aplicación arranca con los
-datos de `lib/model/mock_data.dart` y no necesita credenciales.
+La aplicación se conecta a Supabase al arrancar, así que necesita `env.json`
+(ver la sección siguiente). Sin ese archivo, `Supabase.initialize` falla
+porque la URL y la llave llegan vacías.
 
 ## Variables de entorno
 
