@@ -130,4 +130,4 @@ del Bloque B y `EventoService` del Bloque C.
   - [ ] 3. Correr `project-architecture-auditor` y `flutter-clean-code-linter`.
 - Verificación:
   - [ ] `flutter analyze` y `flutter test` en verde.
-- Commit sugerido: `docs: cierra el bloque de imagenes de portada`
+`
